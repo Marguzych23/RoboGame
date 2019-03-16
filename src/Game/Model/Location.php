@@ -1,7 +1,7 @@
 <?php
 
 
-namespace GameBundle\Model;
+namespace App\Game\Model;
 
 
 class Location
