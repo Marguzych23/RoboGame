@@ -22,6 +22,9 @@ class Robot
     /** @var Trap $trap */
     protected $trap;
 
+    /** @var Location $location */
+    protected $location;
+
     /**
      * Robot constructor.
      * @param Health|null $health
@@ -87,5 +90,37 @@ class Robot
     public function setArmor(Armor $armor): void
     {
         $this->armor = $armor;
+    }
+
+    /**
+     * @return Trap
+     */
+    public function getTrap(): Trap
+    {
+        return $this->trap;
+    }
+
+    /**
+     * @param Trap $trap
+     */
+    public function setTrap(Trap $trap): void
+    {
+        $this->trap = $trap;
+    }
+
+    /**
+     * @return Location
+     */
+    public function getLocation(): Location
+    {
+        return $this->location;
+    }
+
+    /**
+     * @param Location $location
+     */
+    public function setLocation(Location $location): void
+    {
+        $this->location = $location;
     }
 }

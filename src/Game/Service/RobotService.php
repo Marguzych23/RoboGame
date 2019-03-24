@@ -9,6 +9,7 @@ use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\HealthAchievement;
 use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
+use App\Game\Model\Location;
 use App\Game\Model\Robot;
 
 class RobotService
@@ -84,8 +85,22 @@ class RobotService
         return count($robot->getWeapons()) > 0;
     }
 
-    public function useTrapAgainstRobot(Robot &$robot, Trap $trap) {
+    /**
+     * @param Robot $robot
+     * @param Trap $trap
+     */
+    public function setTrapForRobot(Robot &$robot, Trap $trap)
+    {
+        $robot->setTrap($trap);
+    }
 
+    /**
+     * @param Robot $robot
+     * @param Location $location
+     */
+    public function setLocationForRobot(Robot &$robot, Location $location)
+    {
+        $robot->setLocation($location);
     }
 
     /**
