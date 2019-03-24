@@ -4,11 +4,13 @@
 namespace App\Game\Model\Location;
 
 
+use App\Game\Model\Coordinates;
+
 abstract class Location
 {
     const SIZE = 40;
 
-    /** @var array $startCoordinates */
+    /** @var Coordinates $startCoordinates */
     protected $startCoordinates;
 
     /** @var string $name */
@@ -16,29 +18,27 @@ abstract class Location
 
     /**
      * Location constructor.
-     * @param array $startCoordinates
+     * @param Coordinates $startCoordinates
+     * @param string $name
      */
-    public function __construct(array $startCoordinates, $name)
+    public function __construct(Coordinates $startCoordinates, string $name)
     {
-        if (empty($startCoordinates)) {
-            $startCoordinates = array(0, 0);
-        }
         $this->startCoordinates = $startCoordinates;
         $this->name = $name;
     }
 
     /**
-     * @return array
+     * @return Coordinates
      */
-    public function getStartCoordinates(): array
+    public function getStartCoordinates(): Coordinates
     {
         return $this->startCoordinates;
     }
 
     /**
-     * @param array $startCoordinates
+     * @param Coordinates $startCoordinates
      */
-    public function setStartCoordinates(array $startCoordinates): void
+    public function setStartCoordinates(Coordinates $startCoordinates): void
     {
         $this->startCoordinates = $startCoordinates;
     }
