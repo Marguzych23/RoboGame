@@ -8,97 +8,97 @@ class DeadArea
 {
     const START_SIZE = 100;
 
-    /** @var int $currentStepSize */
-    protected $currentStepSize;
+    /** @var int $currentStepAreaSize */
+    protected $currentStepAreaSize;
 
-    /** @var array $locationsCoordinates */
-    protected $locationsCoordinates;
+    /** @var Location[] $locations */
+    protected $locations;
 
-    /** @var array $robotsCoordinates */
-    protected $robotsCoordinates;
+    /** @var Robot[] $robots */
+    protected $robots;
 
-    /** @var array $interactionObject */
-    protected $interactionObject;
+    /** @var array $interactionObjects */
+    protected $interactionObjects;
 
     /**
      * DeadArea constructor.
-     * @param array $locationsCoordinates
-     * @param array $robotsCoordinates
-     * @param array $interactionObject
-     * @param int $currentStepSize
+     * @param array $locations
+     * @param array $robots
+     * @param array $interactionObjects
+     * @param int $currentStepAreaSize
      */
-    public function __construct(array $locationsCoordinates, array $robotsCoordinates, array $interactionObject, int $currentStepSize = 0)
+    public function __construct(array $locations, array $robots, array $interactionObjects, int $currentStepAreaSize = self::START_SIZE)
     {
-        if ($currentStepSize < 1) {
-            $currentStepSize = self::START_SIZE;
+        if ($currentStepAreaSize < 1) {
+            $currentStepAreaSize = self::START_SIZE;
         }
-        $this->currentStepSize = $currentStepSize;
-        $this->locationsCoordinates = $locationsCoordinates;
-        $this->robotsCoordinates = $robotsCoordinates;
-        $this->interactionObject = $interactionObject;
+        $this->currentStepAreaSize = $currentStepAreaSize;
+        $this->locations = $locations;
+        $this->robots = $robots;
+        $this->interactionObjects = $interactionObjects;
     }
 
     /**
      * @return int
      */
-    public function getCurrentStepSize(): int
+    public function getCurrentStepAreaSize(): int
     {
-        return $this->currentStepSize;
+        return $this->currentStepAreaSize;
     }
 
     /**
-     * @param int $currentStepSize
+     * @param int $currentStepAreaSize
      */
-    public function setCurrentStepSize(int $currentStepSize): void
+    public function setCurrentStepAreaSize(int $currentStepAreaSize): void
     {
-        $this->currentStepSize = $currentStepSize;
-    }
-
-    /**
-     * @return array
-     */
-    public function getLocationsCoordinates(): array
-    {
-        return $this->locationsCoordinates;
-    }
-
-    /**
-     * @param array $locationsCoordinates
-     */
-    public function setLocationsCoordinates(array $locationsCoordinates): void
-    {
-        $this->locationsCoordinates = $locationsCoordinates;
+        $this->currentStepAreaSize = $currentStepAreaSize;
     }
 
     /**
      * @return array
      */
-    public function getRobotsCoordinates(): array
+    public function getLocations(): array
     {
-        return $this->robotsCoordinates;
+        return $this->locations;
     }
 
     /**
-     * @param array $robotsCoordinates
+     * @param array $locations
      */
-    public function setRobotsCoordinates(array $robotsCoordinates): void
+    public function setLocations(array $locations): void
     {
-        $this->robotsCoordinates = $robotsCoordinates;
+        $this->locations = $locations;
     }
 
     /**
      * @return array
      */
-    public function getInteractionObject(): array
+    public function getRobots(): array
     {
-        return $this->interactionObject;
+        return $this->robots;
     }
 
     /**
-     * @param array $interactionObject
+     * @param array $robots
      */
-    public function setInteractionObject(array $interactionObject): void
+    public function setRobots(array $robots): void
     {
-        $this->interactionObject = $interactionObject;
+        $this->robots = $robots;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInteractionObjects(): array
+    {
+        return $this->interactionObjects;
+    }
+
+    /**
+     * @param array $interactionObjects
+     */
+    public function setInteractionObjects(array $interactionObjects): void
+    {
+        $this->interactionObjects = $interactionObjects;
     }
 }
