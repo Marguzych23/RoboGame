@@ -10,6 +10,9 @@ use App\Game\Model\InteractionObject\Weapon\Weapon;
 
 class Robot
 {
+    /** @var string $code */
+    protected $code;
+
     /** @var Health $health */
     protected $health;
 

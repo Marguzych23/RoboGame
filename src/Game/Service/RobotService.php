@@ -7,6 +7,8 @@ namespace App\Game\Service;
 use App\Game\Model\Health;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\HealthAchievement;
+use App\Game\Model\InteractionObject\Trap\CongestionZone;
+use App\Game\Model\InteractionObject\Trap\SystemFailure;
 use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
 use App\Game\Model\Location;
@@ -14,9 +16,30 @@ use App\Game\Model\Robot;
 
 class RobotService
 {
+    public function createRobot(string $code, int $robotsCount)
+    {
+        return;
+    }
 
+    /**
+     * @param Robot $robot
+     * @return bool
+     */
     public function robotIsCorrect(Robot &$robot)
     {
+        return true;
+    }
+
+    /**
+     * @param Robot $robot
+     * @return array
+     */
+    public function getNextRobotStep(Robot &$robot)
+    {
+        if (!$this->robotHasTrap($robot, CongestionZone::NAME)) {
+
+        }
+        return array();
     }
 
     /**
@@ -70,7 +93,7 @@ class RobotService
      */
     public function useWeapon(Robot &$used, Robot &$against)
     {
-        if ($this->robotHasWeapon($used)) {
+        if ($this->robotHasWeapon($used) && ($used->getTrap()->getName() !== SystemFailure::NAME)) {
             $weapon = array_shift($used->getWeapons());
             $this->useWeaponAgainstRobot($against, $weapon);
         }
@@ -113,6 +136,37 @@ class RobotService
             return true;
         }
         return false;
+    }
+
+    /**
+     * @param Robot $robot
+     * @param string $trapName
+     * @return bool
+     */
+    public function robotHasTrap(Robot &$robot, string $trapName = null)
+    {
+        if (is_null($trapName)) {
+            return ($robot->getTrap()->getActionTime() > 0);
+        }
+        return ($robot->getTrap()->getActionTime() > 0) && ($trapName === $robot->getTrap()->getName());
+    }
+
+    /**
+     * @param Robot $robot
+     */
+    public function changeTrapActionTime(Robot &$robot)
+    {
+        if ($this->robotHasTrap($robot)) {
+            $trap = $robot->getTrap();
+            $newActionTime = $trap->getActionTime();
+            $newActionTime--;
+            if ($newActionTime === 0) {
+                $trap = null;
+            } else {
+                $trap->setActionTime($newActionTime);
+            }
+            $robot->setTrap($trap);
+        }
     }
 
 }
