@@ -13,12 +13,25 @@ use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
 use App\Game\Model\Location;
 use App\Game\Model\Robot;
+use App\Game\Model\Script;
 
 class RobotService
 {
-    public function createRobot(string $code, int $robotsCount)
+    /** @var ScriptService $scriptService */
+    protected $scriptService;
+
+    /**
+     * RobotService constructor.
+     * @param ScriptService $scriptService
+     */
+    public function __construct(ScriptService $scriptService)
     {
-        return;
+        $this->scriptService = $scriptService;
+    }
+
+    public function createRobot(string $code, array $coordinates)
+    {
+        return new Robot(new Script($code), $coordinates);
     }
 
     /**
@@ -27,17 +40,19 @@ class RobotService
      */
     public function robotIsCorrect(Robot &$robot)
     {
+//        TODO
         return true;
     }
 
     /**
      * @param Robot $robot
+     * @param array $opponentsArray
      * @return array
      */
-    public function getNextRobotStep(Robot &$robot)
+    public function getNextRobotStep(Robot &$robot, array $opponentsArray = array())
     {
         if (!$this->robotHasTrap($robot, CongestionZone::NAME)) {
-
+            return $this->scriptService->getNextRobotStep($robot, $opponentsArray);
         }
         return array();
     }
@@ -94,8 +109,17 @@ class RobotService
     public function useWeapon(Robot &$used, Robot &$against)
     {
         if ($this->robotHasWeapon($used) && ($used->getTrap()->getName() !== SystemFailure::NAME)) {
-            $weapon = array_shift($used->getWeapons());
+            $maxDamageWeaponValue = 0;
+            $maxDamageWeaponIndex = -1;
+            for ($i = 0; $i < count($used->getWeapons()); $i++) {
+                if ($maxDamageWeaponValue < $used->getWeapons()[$i]->getWeaponDamage()) {
+                    $maxDamageWeaponValue = $used->getWeapons()[$i]->getWeaponDamage();
+                    $maxDamageWeaponIndex = $i;
+                }
+            }
+            $weapon = $used->getWeapons()[$maxDamageWeaponIndex];
             $this->useWeaponAgainstRobot($against, $weapon);
+            array_splice($used->getWeapons(), $maxDamageWeaponIndex, 1);
         }
     }
 
@@ -168,5 +192,4 @@ class RobotService
             $robot->setTrap($trap);
         }
     }
-
 }

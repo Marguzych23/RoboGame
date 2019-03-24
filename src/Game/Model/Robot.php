@@ -10,8 +10,8 @@ use App\Game\Model\InteractionObject\Weapon\Weapon;
 
 class Robot
 {
-    /** @var string $code */
-    protected $code;
+    /** @var Script $script */
+    protected $script;
 
     /** @var Health $health */
     protected $health;
@@ -25,23 +25,33 @@ class Robot
     /** @var Trap $trap */
     protected $trap;
 
+    /** @var array $coordinates */
+    protected $coordinates;
+
     /** @var Location $location */
     protected $location;
 
     /**
      * Robot constructor.
+     * @param Script $script
+     * @param array $coordinates
      * @param Health|null $health
      * @param array $weapons
      * @param Armor|null $armor
      */
-    public function __construct(Health $health = null, array $weapons = array(), Armor $armor = null)
+    public function __construct(Script $script, array $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null)
     {
         if (is_null($health)) {
             $health = new Health();
         }
+        if (empty($coordinates)) {
+            $coordinates = array(0, 0);
+        }
         if (is_null($armor)) {
             $armor = new Armor();
         }
+        $this->script = $script;
+        $this->coordinates = $coordinates;
         $this->health = $health;
         $this->weapons = $weapons;
         $this->armor = $armor;
@@ -125,5 +135,21 @@ class Robot
     public function setLocation(Location $location): void
     {
         $this->location = $location;
+    }
+
+    /**
+     * @return Script
+     */
+    public function getScript(): Script
+    {
+        return $this->script;
+    }
+
+    /**
+     * @param Script $script
+     */
+    public function setScript(Script $script): void
+    {
+        $this->script = $script;
     }
 }
