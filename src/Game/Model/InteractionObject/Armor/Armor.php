@@ -1,20 +1,22 @@
 <?php
 
 
-namespace App\Game\Model;
+namespace App\Game\Model\InteractionObject\Armor;
 
 
-class Armor extends InteractionObject
+use App\Game\Model\InteractionObject\InteractionObject;
+
+class Armor implements InteractionObject
 {
     const MAX_VALUE = 300;
+    const MIN_VALUE = 0;
     const ITERATION_VALUE = 100;
-    const START_VALUE = 0;
 
     protected $value;
 
     public function __construct()
     {
-        $this->value = self::START_VALUE;
+        $this->value = self::MIN_VALUE;
     }
 
     /**
@@ -30,6 +32,9 @@ class Armor extends InteractionObject
      */
     public function setValue(int $value): void
     {
+        if ($value > self::MAX_VALUE) {
+            $value = self::MAX_VALUE;
+        }
         $this->value = $value;
     }
 }

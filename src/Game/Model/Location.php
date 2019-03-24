@@ -16,6 +16,7 @@ class Location
     /**
      * Location constructor.
      * @param array $startCoordinates
+     * @param array $interactionObjectsCoordinates
      */
     public function __construct(array $startCoordinates, array $interactionObjectsCoordinates)
     {

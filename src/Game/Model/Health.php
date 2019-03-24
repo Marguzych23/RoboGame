@@ -4,12 +4,10 @@
 namespace App\Game\Model;
 
 
-class Health extends InteractionObject
+class Health
 {
     const START_VALUE = 500;
-    // Desert area
-    const ACHIEVE_FUEL_VALUE = 100;
-    const ACHIEVE_GREASE_VALUE = 80;
+    const MIN_VALUE = 0;
 
     protected $value;
 
@@ -31,6 +29,11 @@ class Health extends InteractionObject
      */
     public function setValue(int $value): void
     {
+        if ($value > self::START_VALUE) {
+            $value = self::START_VALUE;
+        } elseif ($value < self::MIN_VALUE) {
+            $value = self::MIN_VALUE;
+        }
         $this->value = $value;
     }
 }

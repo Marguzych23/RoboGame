@@ -4,6 +4,9 @@
 namespace App\Game\Model;
 
 
+use App\Game\Model\InteractionObject\Armor\Armor;
+use App\Game\Model\InteractionObject\Weapon\Weapon;
+
 class Robot
 {
     /** @var Health $health */
