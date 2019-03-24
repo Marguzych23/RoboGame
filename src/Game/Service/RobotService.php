@@ -29,7 +29,7 @@ class RobotService
         $this->scriptService = $scriptService;
     }
 
-    public function createRobot(string $code, array $coordinates)
+    public function createRobot(string $code, array $coordinates): Robot
     {
         return new Robot(new Script($code), $coordinates);
     }

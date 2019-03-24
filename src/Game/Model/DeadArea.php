@@ -4,6 +4,8 @@
 namespace App\Game\Model;
 
 
+use App\Game\Model\Location\Location;
+
 class DeadArea
 {
     const START_SIZE = 100;
