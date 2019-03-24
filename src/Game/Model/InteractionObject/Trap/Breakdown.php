@@ -4,9 +4,9 @@
 namespace App\Game\Model\InteractionObject\Trap;
 
 
-class SystemFailure extends Trap
+class Breakdown extends Trap
 {
-    const TIME_OF_ACTION = 2;
+    const TIME_OF_ACTION = 1;
 
     public function __construct()
     {

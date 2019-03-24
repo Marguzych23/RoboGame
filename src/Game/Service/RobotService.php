@@ -7,9 +7,9 @@ namespace App\Game\Service;
 use App\Game\Model\Health;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\HealthAchievement;
+use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
 use App\Game\Model\Robot;
-use App\Game\Model\Trap;
 
 class RobotService
 {

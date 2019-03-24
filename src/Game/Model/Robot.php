@@ -5,6 +5,7 @@ namespace App\Game\Model;
 
 
 use App\Game\Model\InteractionObject\Armor\Armor;
+use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
 
 class Robot
@@ -17,6 +18,9 @@ class Robot
 
     /** @var Armor $armor */
     protected $armor;
+
+    /** @var Trap $trap */
+    protected $trap;
 
     /**
      * Robot constructor.

@@ -4,7 +4,7 @@
 namespace App\Game\Model\InteractionObject\Trap;
 
 
-class SystemFailure extends Trap
+class CongestionZone extends Trap
 {
     const TIME_OF_ACTION = 2;
 
