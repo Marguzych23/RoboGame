@@ -9,8 +9,13 @@ class GreaseAchievement extends HealthAchievement
     const NAME = 'Смазка';
     const VALUE = 80;
 
-    public function __construct()
+    /**
+     * GreaseAchievement constructor.
+     * @param Coordinates $coordinates
+     */
+    public function __construct(Coordinates $coordinates)
     {
+        parent::__construct($coordinates);
         parent::setAchieveName(self::NAME);
         parent::setAchieveValue(self::VALUE);
     }

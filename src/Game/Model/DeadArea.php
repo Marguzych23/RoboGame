@@ -4,6 +4,7 @@
 namespace App\Game\Model;
 
 
+use App\Game\Model\InteractionObject\InteractionObject;
 use App\Game\Model\Location\Location;
 
 class DeadArea
@@ -19,7 +20,7 @@ class DeadArea
     /** @var Robot[] $robots */
     protected $robots;
 
-    /** @var array $interactionObjects */
+    /** @var InteractionObject[] $interactionObjects */
     protected $interactionObjects;
 
     /**

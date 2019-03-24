@@ -4,7 +4,9 @@
 namespace App\Game\Model\InteractionObject\HealthAchievement;
 
 
-abstract class HealthAchievement implements InteractionObject
+use App\Game\Model\InteractionObject\InteractionObject;
+
+abstract class HealthAchievement extends InteractionObject
 {
     /** @var string $name */
     protected $name;

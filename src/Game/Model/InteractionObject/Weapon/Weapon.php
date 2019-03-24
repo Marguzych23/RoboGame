@@ -6,7 +6,7 @@ namespace App\Game\Model\InteractionObject\Weapon;
 
 use App\Game\Model\InteractionObject\InteractionObject;
 
-abstract class Weapon implements InteractionObject
+abstract class Weapon extends InteractionObject
 {
     /** @var string $name */
     protected $name;

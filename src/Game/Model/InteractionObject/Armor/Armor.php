@@ -4,9 +4,10 @@
 namespace App\Game\Model\InteractionObject\Armor;
 
 
+use App\Game\Model\Coordinates;
 use App\Game\Model\InteractionObject\InteractionObject;
 
-class Armor implements InteractionObject
+class Armor extends InteractionObject
 {
     const MAX_VALUE = 300;
     const MIN_VALUE = 0;
@@ -14,8 +15,13 @@ class Armor implements InteractionObject
 
     protected $value;
 
-    public function __construct()
+    /**
+     * Armor constructor.
+     * @param Coordinates $coordinates
+     */
+    public function __construct(Coordinates $coordinates)
     {
+        parent::__construct($coordinates);
         $this->value = self::MIN_VALUE;
     }
 
