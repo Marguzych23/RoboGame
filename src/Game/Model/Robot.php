@@ -7,6 +7,7 @@ namespace App\Game\Model;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
+use App\Game\Model\Location\Location;
 
 class Robot
 {
@@ -48,7 +49,7 @@ class Robot
             $coordinates = array(0, 0);
         }
         if (is_null($armor)) {
-            $armor = new Armor();
+            $armor = new Armor(null);
         }
         $this->script = $script;
         $this->coordinates = $coordinates;
