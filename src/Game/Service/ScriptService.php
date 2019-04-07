@@ -17,7 +17,7 @@ class ScriptService
     public function getNextRobotStep(Robot $robot, array $opponentsCoordinates = array())
     {
 //        TODO
-        return new Step();
+        return new Step(null);
     }
 
     /**
