@@ -1,0 +1,17 @@
+routes:
+#Get
+    homepage:
+        path: "/index"
+        response: ["nickName"]
+
+    login:
+        path: "/login"
+        response: []
+
+
+#Post
+    auth:
+        path: "/login"
+        post: ["nickName"]
+        response: "redirect to homepage"
+

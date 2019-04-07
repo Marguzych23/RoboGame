@@ -6,7 +6,7 @@ namespace App\Game\Model\InteractionObject;
 
 use App\Game\Model\Coordinates;
 
-abstract class InteractionObject
+abstract class InteractionObject implements \JsonSerializable
 {
     /** @var Coordinates $coordinates */
     protected $coordinates;
@@ -36,4 +36,10 @@ abstract class InteractionObject
         $this->coordinates = $coordinates;
     }
 
+    public function jsonSerialize()
+    {
+        return array(
+            'coordinates' => $this->coordinates
+        );
+    }
 }

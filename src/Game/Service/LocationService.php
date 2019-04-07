@@ -76,25 +76,25 @@ class LocationService
                 case ElectricEarth::NAME:
                     {
                         $tempInteractionObjects = array(
-                            new Armor(null),
-                            new ElectricStaff(null),
+                            new Armor(new Coordinates(0,0)),
+                            new ElectricStaff(new Coordinates(0,0)),
                         );
                         break;
                     }
                 case RainJungle::NAME:
                     {
                         $tempInteractionObjects = array(
-                            new Machete(null),
-                            new AztecSpear(null),
-                            new SwirlWhip(null),
+                            new Machete(new Coordinates(0,0)),
+                            new AztecSpear(new Coordinates(0,0)),
+                            new SwirlWhip(new Coordinates(0,0)),
                         );
                         break;
                     }
                 case DesertArea::NAME:
                     {
                         $tempInteractionObjects = array(
-                            new FuelAchievement(null),
-                            new GreaseAchievement(null),
+                            new FuelAchievement(new Coordinates(0,0)),
+                            new GreaseAchievement(new Coordinates(0,0)),
                         );
                         break;
                     }

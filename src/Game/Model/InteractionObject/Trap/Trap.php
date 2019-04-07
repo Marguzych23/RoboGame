@@ -45,4 +45,13 @@ abstract class Trap extends InteractionObject
     {
         $this->name = $name;
     }
+
+    public function jsonSerialize()
+    {
+        $jsonSerializeArray = parent::jsonSerialize();
+        return array_merge($jsonSerializeArray, array(
+            'name' => $this->name,
+            'actionTime' => $this->actionTime,
+        ));
+    }
 }

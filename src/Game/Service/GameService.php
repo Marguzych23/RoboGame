@@ -31,7 +31,7 @@ class GameService
      */
     public function getGame()
     {
-        if (is_null(self::$game) === false) {
+        if (is_null(self::$game)) {
             $locations = $this->locationService->generateLocationsForArea();
 
             self::$game = new Game(

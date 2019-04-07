@@ -1,9 +1,8 @@
 <?php
 
-
 namespace App\Game\Model\InteractionObject\HealthAchievement;
 
-
+use App\Game\Model\Coordinates;
 use App\Game\Model\InteractionObject\InteractionObject;
 
 abstract class HealthAchievement extends InteractionObject
@@ -43,5 +42,14 @@ abstract class HealthAchievement extends InteractionObject
     protected function setAchieveName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function jsonSerialize()
+    {
+        $jsonSerializeArray = parent::jsonSerialize();
+        return array_merge($jsonSerializeArray, array(
+            'name' => $this->name,
+            'value' => $this->value,
+        ));
     }
 }

@@ -4,7 +4,7 @@
 namespace App\Game\Model;
 
 
-class Health
+class Health implements \JsonSerializable
 {
     const START_VALUE = 500;
     const MIN_VALUE = 0;
@@ -35,5 +35,17 @@ class Health
             $value = self::MIN_VALUE;
         }
         $this->value = $value;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return array('value' => $this->value);
     }
 }

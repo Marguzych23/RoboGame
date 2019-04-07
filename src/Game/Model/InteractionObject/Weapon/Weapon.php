@@ -45,4 +45,12 @@ abstract class Weapon extends InteractionObject
         $this->name = $name;
     }
 
+    public function jsonSerialize()
+    {
+        $jsonSerializeArray = parent::jsonSerialize();
+        return array_merge($jsonSerializeArray, array(
+            'name' => $this->name,
+            'value' => $this->value
+        ));
+    }
 }

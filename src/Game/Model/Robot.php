@@ -9,7 +9,7 @@ use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
 use App\Game\Model\Location\Location;
 
-class Robot
+class Robot implements \JsonSerializable
 {
     /** @var Script $script */
     protected $script;
@@ -152,5 +152,25 @@ class Robot
     public function setScript(Script $script): void
     {
         $this->script = $script;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'coordinates' => $this->coordinates,
+            'script' => $this->script,
+            'location' => $this->location,
+            'trap' => $this->trap,
+            'weapons' => $this->weapons,
+            'armor' => $this->armor,
+            'health' => $this->health,
+        );
     }
 }

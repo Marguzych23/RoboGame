@@ -4,6 +4,8 @@
 namespace App\Game\Model\InteractionObject\HealthAchievement;
 
 
+use App\Game\Model\Coordinates;
+
 class GreaseAchievement extends HealthAchievement
 {
     const NAME = 'Смазка';

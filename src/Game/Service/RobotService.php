@@ -55,7 +55,7 @@ class RobotService
         if (!$this->robotHasTrap($robot, CongestionZone::NAME)) {
             return $this->scriptService->getNextRobotStep($robot, $opponentsArray);
         }
-        return new Step();
+        return new Step(null);
     }
 
     /**

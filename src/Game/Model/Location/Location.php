@@ -6,7 +6,7 @@ namespace App\Game\Model\Location;
 
 use App\Game\Model\Coordinates;
 
-abstract class Location
+abstract class Location implements \JsonSerializable
 {
     const SIZE = 40;
 
@@ -59,4 +59,12 @@ abstract class Location
         $this->name = $name;
     }
 
+    public function jsonSerialize()
+    {
+        return array(
+            'name' => $this->name,
+            'startCoordinates' => $this->startCoordinates,
+            'size' => self::SIZE,
+        );
+    }
 }
