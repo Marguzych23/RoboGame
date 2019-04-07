@@ -49,7 +49,7 @@ class Robot implements \JsonSerializable
             $coordinates = new Coordinates(0, 0);
         }
         if (is_null($armor)) {
-            $armor = new Armor(null);
+            $armor = new Armor($coordinates);
         }
         $this->script = $script;
         $this->coordinates = $coordinates;

@@ -46,14 +46,14 @@ class GameService
     }
 
     /**
-     * @param string $code
+     * @param string $script
      * @return bool
      */
-    public function setRobot(string $code)
+    public function setRobot(string $script)
     {
         $result = false;
-        if ($this->robotService->robotScriptCodeIsCorrect($code)) {
-            $robot = $this->robotService->createRobot($code, $this->locationService->generateLocationForRobot());
+        if ($this->robotService->robotScriptCodeIsCorrect($script)) {
+            $robot = $this->robotService->createRobot($script, $this->locationService->generateLocationForRobot());
             if ($this->getGame()->setRobot($robot) > 0) {
                 $result = true;
             }

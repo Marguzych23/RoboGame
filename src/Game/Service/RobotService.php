@@ -31,18 +31,18 @@ class RobotService
         $this->scriptService = $scriptService;
     }
 
-    public function createRobot(string $code, Coordinates $coordinates): Robot
+    public function createRobot(string $script, Coordinates $coordinates): Robot
     {
-        return new Robot(new Script($code), $coordinates);
+        return new Robot(new Script($script), $coordinates);
     }
 
     /**
-     * @param string $code
+     * @param string $script
      * @return bool
      */
-    public function robotScriptCodeIsCorrect(string $code)
+    public function robotScriptCodeIsCorrect(string $script)
     {
-        return $this->scriptService->robotCodeIsCorrect($code);
+        return $this->scriptService->robotScriptCodeIsCorrect($script);
     }
 
     /**

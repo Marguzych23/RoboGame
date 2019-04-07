@@ -24,4 +24,10 @@ class RobotController extends AbstractController
         $game = $request->query->get('game');
         return new Response(json_encode($game, JSON_UNESCAPED_UNICODE));
     }
+
+    public function createRobot(Request $request)
+    {
+        $script = $request->get('script', null);
+        if (is_null($script)) {}
+    }
 }

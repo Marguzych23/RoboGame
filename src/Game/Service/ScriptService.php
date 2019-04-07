@@ -21,10 +21,10 @@ class ScriptService
     }
 
     /**
-     * @param string $code
+     * @param string $script
      * @return bool
      */
-    public function robotCodeIsCorrect(string $code)
+    public function robotScriptCodeIsCorrect(string $script)
     {
 //        TODO
         return true;

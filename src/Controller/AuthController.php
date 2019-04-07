@@ -29,7 +29,9 @@ class AuthController extends AbstractController
      */
     public function auth(Request $request)
     {
-        if (is_null($request->get('nickName'))) {
+        $nickName = $request->get('nickName', null);
+        $nickName = 'Marguzych';
+        if (is_null($nickName)) {
             return new JsonResponse("Введите имя пользователя");
         }
         return $this->redirectToRoute('homepage', array('nickName' => $request->get('nickName')));
