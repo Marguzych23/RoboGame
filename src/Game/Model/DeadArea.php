@@ -42,6 +42,14 @@ class DeadArea
     }
 
     /**
+     * @param Robot $robot
+     * @return int
+     */
+    public function setRobot(Robot $robot) {
+        return array_push($this->robots, $robot);
+    }
+
+    /**
      * @return int
      */
     public function getCurrentStepAreaSize(): int

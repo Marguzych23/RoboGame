@@ -35,18 +35,18 @@ class Robot
     /**
      * Robot constructor.
      * @param Script $script
-     * @param array $coordinates
+     * @param Coordinates $coordinates
      * @param Health|null $health
      * @param array $weapons
      * @param Armor|null $armor
      */
-    public function __construct(Script $script, array $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null)
+    public function __construct(Script $script, Coordinates $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null)
     {
         if (is_null($health)) {
             $health = new Health();
         }
         if (empty($coordinates)) {
-            $coordinates = array(0, 0);
+            $coordinates = new Coordinates(0, 0);
         }
         if (is_null($armor)) {
             $armor = new Armor(null);

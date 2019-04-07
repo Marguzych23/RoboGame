@@ -5,14 +5,17 @@ namespace App\Game\Service;
 
 
 use App\Game\Model\DeadArea;
+use App\Game\Model\InteractionObject\InteractionObject;
+use App\Game\Model\Location\Location;
+use App\Game\Model\Robot;
 
 class DeadAreaService
 {
 
     /**
-     * @param array $locations
-     * @param array $robots
-     * @param array $interactionObjects
+     * @param Location[] $locations
+     * @param Robot[] $robots
+     * @param InteractionObject[] $interactionObjects
      * @return DeadArea
      */
     public function generateDeadArea(array $locations, array $robots, array $interactionObjects)

@@ -5,6 +5,7 @@ namespace App\Game\Service;
 
 
 use App\Game\Model\Coordinates;
+use App\Game\Model\DeadArea;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\FuelAchievement;
 use App\Game\Model\InteractionObject\HealthAchievement\GreaseAchievement;
@@ -20,6 +21,8 @@ use App\Game\Model\Location\RainJungle;
 
 class LocationService
 {
+    /** @var Coordinates[] $usedCoordinates */
+    protected $occupiedCoordinates = array();
 
     /**
      * @return Location[]
@@ -36,6 +39,30 @@ class LocationService
     }
 
     /**
+     * @return Coordinates
+     */
+    public function generateLocationForRobot(): Coordinates
+    {
+        /** @var Coordinates $tempCoordinates */
+        $tempCoordinates = null;
+        while (true) {
+            if (is_null($tempCoordinates)) {
+                $x = mt_rand(0, DeadArea::START_SIZE - 1);
+                $y = mt_rand(0, DeadArea::START_SIZE - 1);
+                $tempCoordinates = new Coordinates($x, $y);
+                foreach ($this->occupiedCoordinates as $coordinate) {
+                    if (($coordinate->getX() === $tempCoordinates->getX()) && $coordinate->getY() == $tempCoordinates->getY()) {
+                        $tempCoordinates = null;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+        return $tempCoordinates;
+    }
+
+    /**
      * @param Location[] $locations
      * @return InteractionObject[]
      */
@@ -44,11 +71,11 @@ class LocationService
         /** @var InteractionObject[] $interactionObjects */
         $interactionObjects = array();
         foreach ($locations as $location) {
-            $emptyInteractionObjects = array();
+            $tempInteractionObjects = array();
             switch ($location->getName()) {
                 case ElectricEarth::NAME:
                     {
-                        $emptyInteractionObjects = array(
+                        $tempInteractionObjects = array(
                             new Armor(null),
                             new ElectricStaff(null),
                         );
@@ -56,7 +83,7 @@ class LocationService
                     }
                 case RainJungle::NAME:
                     {
-                        $emptyInteractionObjects = array(
+                        $tempInteractionObjects = array(
                             new Machete(null),
                             new AztecSpear(null),
                             new SwirlWhip(null),
@@ -65,7 +92,7 @@ class LocationService
                     }
                 case DesertArea::NAME:
                     {
-                        $emptyInteractionObjects = array(
+                        $tempInteractionObjects = array(
                             new FuelAchievement(null),
                             new GreaseAchievement(null),
                         );
@@ -76,8 +103,8 @@ class LocationService
                         break;
                     }
             }
-            $this->getInteractionObjectsForLocation($emptyInteractionObjects, $location);
-            array_push($interactionObjects, $emptyInteractionObjects);
+            $this->getInteractionObjectsForLocation($tempInteractionObjects, $location);
+            array_push($interactionObjects, $tempInteractionObjects);
         }
         return $interactionObjects;
     }
@@ -89,17 +116,15 @@ class LocationService
     protected function getInteractionObjectsForLocation(array &$interactionObjects, Location $location)
     {
         $interactionObjectsCountForLocation = 0;
-        /** @var Coordinates[] $coordinates */
-        $coordinates = array();
         while ($interactionObjectsCountForLocation !== count($interactionObjects)) {
-            $emptyCoordinate = $this->generateCoordinatesForInteractionObjects($location->getStartCoordinates(), $location::SIZE);
-            foreach ($coordinates as $coordinate) {
-                if (($coordinate->getX() == $emptyCoordinate->getX()) && $coordinate->getY() == $emptyCoordinate->getY()) {
-                    $emptyCoordinate = null;
+            $tempCoordinates = $this->generateCoordinatesForInteractionObjects($location->getStartCoordinates(), $location::SIZE);
+            foreach ($this->occupiedCoordinates as $coordinate) {
+                if (($coordinate->getX() == $tempCoordinates->getX()) && $coordinate->getY() == $tempCoordinates->getY()) {
+                    $tempCoordinates = null;
                 }
             }
-            if (!is_null($emptyCoordinate)) {
-                $interactionObjects[$interactionObjectsCountForLocation]->setCoordinates($emptyCoordinate);
+            if (!is_null($tempCoordinates)) {
+                $interactionObjects[$interactionObjectsCountForLocation]->setCoordinates($tempCoordinates);
                 $interactionObjectsCountForLocation++;
             }
         }

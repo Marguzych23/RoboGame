@@ -4,6 +4,7 @@
 namespace App\Game\Service;
 
 
+use App\Game\Model\Coordinates;
 use App\Game\Model\Health;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\HealthAchievement;
@@ -11,9 +12,10 @@ use App\Game\Model\InteractionObject\Trap\CongestionZone;
 use App\Game\Model\InteractionObject\Trap\SystemFailure;
 use App\Game\Model\InteractionObject\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
-use App\Game\Model\Location;
+use App\Game\Model\Location\Location;
 use App\Game\Model\Robot;
 use App\Game\Model\Script;
+use App\Game\Model\Step;
 
 class RobotService
 {
@@ -29,32 +31,31 @@ class RobotService
         $this->scriptService = $scriptService;
     }
 
-    public function createRobot(string $code, array $coordinates): Robot
+    public function createRobot(string $code, Coordinates $coordinates): Robot
     {
         return new Robot(new Script($code), $coordinates);
     }
 
     /**
-     * @param Robot $robot
+     * @param string $code
      * @return bool
      */
-    public function robotIsCorrect(Robot &$robot)
+    public function robotScriptCodeIsCorrect(string $code)
     {
-//        TODO
-        return true;
+        return $this->scriptService->robotCodeIsCorrect($code);
     }
 
     /**
      * @param Robot $robot
      * @param array $opponentsArray
-     * @return array
+     * @return Step
      */
     public function getNextRobotStep(Robot &$robot, array $opponentsArray = array())
     {
         if (!$this->robotHasTrap($robot, CongestionZone::NAME)) {
             return $this->scriptService->getNextRobotStep($robot, $opponentsArray);
         }
-        return array();
+        return new Step();
     }
 
     /**
