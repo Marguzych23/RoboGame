@@ -11,6 +11,9 @@ use App\Game\Model\Location\Location;
 
 class Robot implements \JsonSerializable
 {
+    /** @var string $authorNickName */
+    protected $authorNickName;
+
     /** @var Script $script */
     protected $script;
 
@@ -26,7 +29,7 @@ class Robot implements \JsonSerializable
     /** @var Trap $trap */
     protected $trap;
 
-    /** @var array $coordinates */
+    /** @var Coordinates $coordinates */
     protected $coordinates;
 
     /** @var Location $location */
@@ -34,13 +37,14 @@ class Robot implements \JsonSerializable
 
     /**
      * Robot constructor.
+     * @param string $authorNickName
      * @param Script $script
      * @param Coordinates $coordinates
      * @param Health|null $health
      * @param array $weapons
      * @param Armor|null $armor
      */
-    public function __construct(Script $script, Coordinates $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null)
+    public function __construct(string $authorNickName, Script $script, Coordinates $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null)
     {
         if (is_null($health)) {
             $health = new Health();
@@ -51,11 +55,44 @@ class Robot implements \JsonSerializable
         if (is_null($armor)) {
             $armor = new Armor($coordinates);
         }
+        $this->authorNickName = $authorNickName;
         $this->script = $script;
         $this->coordinates = $coordinates;
         $this->health = $health;
         $this->weapons = $weapons;
         $this->armor = $armor;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthorNickName(): string
+    {
+        return $this->authorNickName;
+    }
+
+    /**
+     * @param string $authorNickName
+     */
+    public function setAuthorNickName(string $authorNickName): void
+    {
+        $this->authorNickName = $authorNickName;
+    }
+
+    /**
+     * @return Coordinates
+     */
+    public function getCoordinates(): Coordinates
+    {
+        return $this->coordinates;
+    }
+
+    /**
+     * @param Coordinates $coordinates
+     */
+    public function setCoordinates(Coordinates $coordinates): void
+    {
+        $this->coordinates = $coordinates;
     }
 
     /**

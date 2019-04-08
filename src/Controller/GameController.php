@@ -34,24 +34,39 @@ class GameController extends AbstractController
             return $this->redirectToRoute('homepage', array('nickName' => $nickName));
         }
 
-        $robotIsCreated = $gameService->setRobot($script);
+        $robotIsCreated = $gameService->setRobot($nickName, $script);
 
-        if ($robotIsCreated !== false) {
+        if ($robotIsCreated === false) {
             return new JsonResponse(array(
                 'result' => false
             ));
         }
 
-//        return new Response(json_encode($gameService->getGame(), JSON_UNESCAPED_UNICODE));
-
         return $this->render(
             'game/index.html.twig',
             array(
                 'nickName' => $nickName,
-//                'game' => json_encode($gameService->getGame(), JSON_UNESCAPED_UNICODE),
-                'game' => $gameService->getGame(),
+                'game' => json_encode($gameService->getGame(), JSON_UNESCAPED_UNICODE),
+//                'game' => $gameService->getGame(),
             )
         );
     }
 
+    /**
+     * @Route("/game/get_next_step", name="get_next_step_game", methods={"POST"})
+     * @param Request $request
+     * @param GameService $gameService
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function getNextStep(Request $request, GameService $gameService)
+    {
+        $game = $request->get('game', null);
+        if (is_null($game)) {
+            return new JsonResponse(array(
+                'result' => false
+            ));
+        }
+        return new JsonResponse(json_encode($gameService->getNextStepGame(), JSON_UNESCAPED_UNICODE));
+    }
 }

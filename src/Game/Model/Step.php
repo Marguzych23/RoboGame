@@ -18,6 +18,9 @@ class Step implements \JsonSerializable
      */
     public function __construct(Coordinates $destination, Coordinates $target = null)
     {
+        if (is_null($target)) {
+            $target = new Coordinates(-1, -1);
+        }
         $this->destination = $destination;
         $this->target = $target;
     }

@@ -8,6 +8,7 @@ use App\Game\Model\Coordinates;
 use App\Game\Model\Health;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\HealthAchievement;
+use App\Game\Model\InteractionObject\Trap\Breakdown;
 use App\Game\Model\InteractionObject\Trap\CongestionZone;
 use App\Game\Model\InteractionObject\Trap\SystemFailure;
 use App\Game\Model\InteractionObject\Trap\Trap;
@@ -31,9 +32,15 @@ class RobotService
         $this->scriptService = $scriptService;
     }
 
-    public function createRobot(string $script, Coordinates $coordinates): Robot
+    /**
+     * @param string $nickName
+     * @param string $script
+     * @param Coordinates $coordinates
+     * @return Robot
+     */
+    public function createRobot(string $nickName, string $script, Coordinates $coordinates): Robot
     {
-        return new Robot(new Script($script), $coordinates);
+        return new Robot($nickName, new Script($script), $coordinates);
     }
 
     /**
@@ -57,6 +64,26 @@ class RobotService
         }
         return new Step(null);
     }
+
+    /**
+     * @param Robot $robot
+     * @return bool
+     */
+    public function robotIsDead(Robot &$robot)
+    {
+        if ($robot->getHealth()->getValue() <= Health::MIN_VALUE) {
+            return true;
+        }
+        return false;
+    }
+
+//    public function useHealthAchieveIfThisNeeded(Robot $robot)
+//    {
+//        if (($robot->getHealth()->getValue() < Health::START_VALUE)
+//            && ($robot->)) {
+//
+//        }
+//    }
 
     /**
      * @param Robot $robot
@@ -148,19 +175,9 @@ class RobotService
      */
     public function setLocationForRobot(Robot &$robot, Location $location)
     {
-        $robot->setLocation($location);
-    }
-
-    /**
-     * @param Robot $robot
-     * @return bool
-     */
-    public function robotIsDead(Robot &$robot)
-    {
-        if ($robot->getHealth()->getValue() <= Health::MIN_VALUE) {
-            return true;
+        if (!$this->robotHasTrap($robot, Breakdown::NAME)) {
+            $robot->setLocation($location);
         }
-        return false;
     }
 
     /**
@@ -191,6 +208,13 @@ class RobotService
                 $trap->setActionTime($newActionTime);
             }
             $robot->setTrap($trap);
+        }
+    }
+
+    public function useTrapIfThisExist(Robot $robot)
+    {
+        if ($this->robotHasTrap($robot)) {
+
         }
     }
 }

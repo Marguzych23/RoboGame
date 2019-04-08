@@ -99,7 +99,7 @@ class DeadArea implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return InteractionObject[]
      */
     public function getInteractionObjects(): array
     {

@@ -15,17 +15,30 @@ class IndexController extends AbstractController
 {
 
     /**
-     * @Route("/index", name="homepage")
+     * @Route("/home", name="homepage")
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
 //        TODO work this session
         if (is_null($nickName = $request->get('nickName'))) {
             return $this->redirectToRoute("login");
         }
-//        return $this->render('home/index.html.twig');
-        return new Response('HOMEPAGE');
+        return $this->render('home/index.html.twig');
+    }
+
+    /**
+     * @Route("/about", name="about")
+     * @param Request $request
+     * @return Response
+     */
+    public function about(Request $request)
+    {
+        if (is_null($nickName = $request->get('nickName'))) {
+            return $this->redirectToRoute("login");
+        }
+        return $this->render('home/about.html.twig');
     }
 
 }

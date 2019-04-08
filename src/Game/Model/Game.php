@@ -30,7 +30,7 @@ class Game implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Robot[]
      */
     public function getRobots() {
         return $this->getDeadArea()->getRobots();

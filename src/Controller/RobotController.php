@@ -14,20 +14,26 @@ class RobotController extends AbstractController
 {
 
     /**
-     * @Route("/next_step", name="next_step", methods={"POST", "GET"})
+     * @Route("/create_robot", name="create_robot", methods={"POST"})
      * @param Request $request
      * @return Response
      */
     public function getStepForClient(Request $request)
     {
-        $data = array();
-        $game = $request->query->get('game');
-        return new Response(json_encode($game, JSON_UNESCAPED_UNICODE));
+//        TODO
+        $script = $request->get("script", null);
+        if (is_null($script)) {
+            return new JsonResponse("Error");
+        }
+        return $this->redirectToRoute("homepage");
     }
 
-    public function createRobot(Request $request)
+
+    /**
+     * @Route("/create_robot", name="create_robot_page", methods={"GET"})
+     */
+    public function createRobot()
     {
-        $script = $request->get('script', null);
-        if (is_null($script)) {}
+        return $this->render("robot/create.html.twig");
     }
 }
