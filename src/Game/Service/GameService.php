@@ -5,6 +5,7 @@ namespace App\Game\Service;
 
 
 use App\Game\DTO\CoordinatesDTO;
+use App\Game\DTO\DeadAreaDTO;
 use App\Game\DTO\InteractionObjectDTO;
 use App\Game\DTO\LocationDTO;
 use App\Game\DTO\RobotDTO;
@@ -139,6 +140,12 @@ class GameService
                 )
             );
         }
+
+        return new DeadAreaDTO(
+            $interactionObjectsDTO,
+            $robotsDTO,
+            $locationsDTO
+        );
     }
 
     private function getCoordinatesDTO(Coordinates $coordinates)
