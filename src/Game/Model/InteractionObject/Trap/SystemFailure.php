@@ -17,7 +17,7 @@ class SystemFailure extends Trap
      */
     public function __construct(Coordinates $coordinates)
     {
-        parent::__construct($coordinates);
+        parent::__construct($coordinates, self::NAME);
         $this->actionTime = self::TIME_OF_ACTION;
         $this->name = self::NAME;
     }

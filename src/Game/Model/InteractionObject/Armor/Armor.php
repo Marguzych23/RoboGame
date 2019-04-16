@@ -12,6 +12,7 @@ class Armor extends InteractionObject
     const MAX_VALUE = 300;
     const MIN_VALUE = 0;
     const ITERATION_VALUE = 100;
+    const NAME = 'Armor';
 
     protected $value;
 
@@ -21,7 +22,7 @@ class Armor extends InteractionObject
      */
     public function __construct(Coordinates $coordinates)
     {
-        parent::__construct($coordinates);
+        parent::__construct($coordinates, self::NAME);
         $this->value = self::MIN_VALUE;
     }
 

@@ -41,7 +41,7 @@ abstract class Trap extends InteractionObject
     /**
      * @param string $name
      */
-    protected function setName(string $name): void
+    public function setName(string $name): void
     {
         $this->name = $name;
     }

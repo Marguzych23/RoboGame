@@ -67,7 +67,7 @@ class DeadArea implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Location[]
      */
     public function getLocations(): array
     {
@@ -75,7 +75,7 @@ class DeadArea implements \JsonSerializable
     }
 
     /**
-     * @param array $locations
+     * @param Location[] $locations
      */
     public function setLocations(array $locations): void
     {
