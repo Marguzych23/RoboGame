@@ -33,36 +33,36 @@ class GameService
      */
     public function getNextStepGame()
     {
-//        $game = $this->getGame();
-//        $robots = $game->getRobots();
-//        /** @var Step[] $steps */
-//        $steps = array();
-//        foreach ($robots as $robot) {
-//            $step = $this->robotService->getNextRobotStep($robot);
-//            if (is_null($step->getDestination())) {
-////                TODO
-//                throw new \Exception("Error");
-//            }
-//            array_push($steps, $step);
-//            if (($target = $step->getTarget())->getY() !== -1) {
-//                foreach ($robots as $tRobot) {
-//                    if (($tRobot->getCoordinates()->getX() === $target->getX())
-//                        && ($tRobot->getCoordinates()->getY() === $target->getY())) {
-//                        $this->robotService->useWeapon($robot, $tRobot);
-//                    }
-//                }
-//            }
-//        }
-//        for ($i = 0; $i < count($robots); $i++) {
-//            $this->robotService->useTrapIfThisExist($robots[$i]);
-//            foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
-//                if (($interactionObject->getCoordinates()->getX() === $steps[$i]->getDestination()->getX())
-//                    && ($interactionObject->getCoordinates()->getY() === $steps[$i]->getDestination()->getY())) {
-//
-//                }
-//            }
-//            $this->robotService->useHealthAchieve($robot);
-//        }
+        $game = $this->getGame();
+        $robots = $game->getRobots();
+        /** @var Step[] $steps */
+        $steps = array();
+        foreach ($robots as $robot) {
+            $step = $this->robotService->getNextRobotStep($robot);
+            if (is_null($step->getDestination())) {
+//                TODO
+                throw new \Exception("Error");
+            }
+            array_push($steps, $step);
+            if (($target = $step->getTarget())->getY() !== -1) {
+                foreach ($robots as $tRobot) {
+                    if (($tRobot->getCoordinates()->getX() === $target->getX())
+                        && ($tRobot->getCoordinates()->getY() === $target->getY())) {
+                        $this->robotService->useWeapon($robot, $tRobot);
+                    }
+                }
+            }
+        }
+        for ($i = 0; $i < count($robots); $i++) {
+            $this->robotService->useTrapIfThisExist($robots[$i]);
+            foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
+                if (($interactionObject->getCoordinates()->getX() === $steps[$i]->getDestination()->getX())
+                    && ($interactionObject->getCoordinates()->getY() === $steps[$i]->getDestination()->getY())) {
+
+                }
+            }
+            $this->robotService->useHealthAchieve($robot);
+        }
         return $game;
     }
 

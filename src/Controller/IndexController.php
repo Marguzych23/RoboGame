@@ -22,7 +22,7 @@ class IndexController extends AbstractController
     public function index(Request $request)
     {
 //        TODO work this session
-        if (is_null($nickName = $request->get('nickName'))) {
+        if (is_null($user = $request->get('user'))) {
             return $this->redirectToRoute("login");
         }
         return $this->render('home/index.html.twig');
