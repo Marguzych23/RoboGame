@@ -9,6 +9,9 @@ use App\Game\Model\DeadArea;
 use App\Game\Model\InteractionObject\InteractionObject;
 use App\Game\Model\Location\Location;
 use App\Game\Model\Robot;
+use App\Game\Model\Trap\Breakdown;
+use App\Game\Model\Trap\CongestionZone;
+use App\Game\Model\Trap\SystemFailure;
 use App\Game\Model\Trap\Trap;
 
 class DeadAreaService
@@ -38,13 +41,32 @@ class DeadAreaService
      */
     public function generateTraps()
     {
-        return array();
+        $traps = array();
+        array_push($traps,
+            new Breakdown(
+                $this->coordinatesService->generateCoordinates(0, DeadArea::START_SIZE - 1,
+                    0, DeadArea::START_SIZE - 1)
+            )
+        );
+        array_push($traps,
+            new CongestionZone(
+                $this->coordinatesService->generateCoordinates(0, DeadArea::START_SIZE - 1,
+                    0, DeadArea::START_SIZE - 1)
+            )
+        );
+        array_push($traps,
+            new SystemFailure(
+                $this->coordinatesService->generateCoordinates(0, DeadArea::START_SIZE - 1,
+                    0, DeadArea::START_SIZE - 1)
+            )
+        );
+        return $traps;
     }
 
     /**
      * @return Coordinates
      */
-    public function generateLocationForRobot()
+    public function generateCoordinatesForRobot()
     {
         return $this->robotService->generateCoordinatesForRobot();
     }

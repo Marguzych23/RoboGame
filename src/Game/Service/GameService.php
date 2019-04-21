@@ -23,6 +23,9 @@ class GameService
     /** @var CoordinatesService $coordinatesService */
     protected $coordinatesService;
 
+    /**
+     * GameService constructor.
+     */
     public function __construct()
     {
         $this->dtoService = new DTOService();
@@ -100,7 +103,7 @@ class GameService
     {
         $result = false;
         if ($this->robotService->robotScriptCodeIsCorrect($script)) {
-            $robot = $this->robotService->createRobot($nickName, $script, $this->deadAreaService->generateLocationForRobot());
+            $robot = $this->robotService->createRobot($nickName, $script, $this->deadAreaService->generateCoordinatesForRobot());
             if ($this->getGame()->setRobot($robot) > 0) {
                 $result = true;
             }

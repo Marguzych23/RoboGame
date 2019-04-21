@@ -101,12 +101,7 @@ class LocationService
     {
         $interactionObjectsCountForLocation = 0;
         while ($interactionObjectsCountForLocation !== count($interactionObjects)) {
-            $tempCoordinates = $this->generateCoordinatesForInteractionObjects($location->getStartCoordinates(), $location::SIZE);
-            foreach ($this->coordinatesService->getOccupiedCoordinates() as $coordinate) {
-                if (($coordinate->getX() == $tempCoordinates->getX()) && $coordinate->getY() == $tempCoordinates->getY()) {
-                    $tempCoordinates = null;
-                }
-            }
+            $tempCoordinates = $this->coordinatesService->generateCoordinatesForInteractionObjects($location->getStartCoordinates(), $location::SIZE);
             if (!is_null($tempCoordinates)) {
                 $interactionObjects[$interactionObjectsCountForLocation]->setCoordinates($tempCoordinates);
                 $interactionObjectsCountForLocation++;
@@ -114,15 +109,4 @@ class LocationService
         }
     }
 
-    /**
-     * @param Coordinates $locationCoordinates
-     * @param int $locationSize
-     * @return Coordinates
-     */
-    protected function generateCoordinatesForInteractionObjects(Coordinates $locationCoordinates, int $locationSize): Coordinates
-    {
-        $x = mt_rand($locationCoordinates->getX(), $locationCoordinates->getX() + $locationSize - 1);
-        $y = mt_rand($locationCoordinates->getY(), $locationCoordinates->getY() + $locationSize - 1);
-        return new Coordinates($x, $y);
-    }
 }
