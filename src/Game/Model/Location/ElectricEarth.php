@@ -13,8 +13,9 @@ class ElectricEarth extends Location
     /**
      * ElectricEarth constructor.
      * @param Coordinates $startCoordinates
+     * @param int $size
      */
-    public function __construct(Coordinates $startCoordinates)
+    public function __construct(Coordinates $startCoordinates, int $size = self::SIZE)
     {
         parent::__construct($startCoordinates, self::NAME);
     }

@@ -1,18 +1,32 @@
 <?php
 
 
-namespace App\Game\Model\InteractionObject\Trap;
+namespace App\Game\Model\Trap;
 
+use App\Game\Model\Coordinates;
 
-use App\Game\Model\InteractionObject\InteractionObject;
-
-abstract class Trap extends InteractionObject
+abstract class Trap
 {
     /** @var int $actionTime */
     protected $actionTime;
 
     /** @var string $name */
     protected $name;
+    /** @var Coordinates $coordinates */
+    protected $coordinates;
+
+    /**
+     * InteractionObject constructor.
+     * @param Coordinates $coordinates
+     * @param string $name
+     * @param int $actionTime
+     */
+    public function __construct(Coordinates $coordinates, string $name, int $actionTime)
+    {
+        $this->coordinates = $coordinates;
+        $this->name = $name;
+        $this->actionTime = $actionTime;
+    }
 
     /**
      * @return int
@@ -48,10 +62,10 @@ abstract class Trap extends InteractionObject
 
     public function jsonSerialize()
     {
-        $jsonSerializeArray = parent::jsonSerialize();
-        return array_merge($jsonSerializeArray, array(
+        return array(
             'name' => $this->name,
+            'coordinates' => $this->coordinates,
             'actionTime' => $this->actionTime,
-        ));
+        );
     }
 }

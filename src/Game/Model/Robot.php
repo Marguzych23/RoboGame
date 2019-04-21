@@ -5,7 +5,7 @@ namespace App\Game\Model;
 
 
 use App\Game\Model\InteractionObject\Armor\Armor;
-use App\Game\Model\InteractionObject\Trap\Trap;
+use App\Game\Model\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
 use App\Game\Model\Location\Location;
 

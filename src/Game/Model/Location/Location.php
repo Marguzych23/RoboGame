@@ -16,15 +16,36 @@ abstract class Location implements \JsonSerializable
     /** @var string $name */
     protected $name;
 
+    /** @var int $size */
+    protected $size;
+
     /**
      * Location constructor.
      * @param Coordinates $startCoordinates
      * @param string $name
+     * @param int $size
      */
-    public function __construct(Coordinates $startCoordinates, string $name)
+    public function __construct(Coordinates $startCoordinates, string $name, int $size = self::SIZE)
     {
         $this->startCoordinates = $startCoordinates;
         $this->name = $name;
+        $this->size = $size;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSize(): int
+    {
+        return $this->size;
+    }
+
+    /**
+     * @param int $size
+     */
+    public function setSize(int $size): void
+    {
+        $this->size = $size;
     }
 
     /**
@@ -64,7 +85,7 @@ abstract class Location implements \JsonSerializable
         return array(
             'name' => $this->name,
             'startCoordinates' => $this->startCoordinates,
-            'size' => self::SIZE,
+            'size' => $this->size,
         );
     }
 }

@@ -12,18 +12,38 @@ class RobotDTO implements \JsonSerializable
     public $name;
     /** @var int $health */
     public $health;
+    /** @var string $script */
+    public $script;
 
     /**
      * RobotDTO constructor.
      * @param CoordinatesDTO $coordinates
      * @param string $name
      * @param int $health
+     * @param string $script
      */
-    public function __construct(CoordinatesDTO $coordinates, string $name, int $health)
+    public function __construct(CoordinatesDTO $coordinates, string $name, int $health, string $script)
     {
         $this->coordinates = $coordinates;
         $this->name = $name;
         $this->health = $health;
+        $this->script = $script;
+    }
+
+    /**
+     * @return string
+     */
+    public function getScript(): string
+    {
+        return $this->script;
+    }
+
+    /**
+     * @param string $script
+     */
+    public function setScript(string $script): void
+    {
+        $this->script = $script;
     }
 
     /**

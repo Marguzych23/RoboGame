@@ -5,13 +5,14 @@ namespace App\Game\Service;
 
 
 use App\Game\Model\Coordinates;
+use App\Game\Model\DeadArea;
 use App\Game\Model\Health;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\HealthAchievement;
-use App\Game\Model\InteractionObject\Trap\Breakdown;
-use App\Game\Model\InteractionObject\Trap\CongestionZone;
-use App\Game\Model\InteractionObject\Trap\SystemFailure;
-use App\Game\Model\InteractionObject\Trap\Trap;
+use App\Game\Model\Trap\Breakdown;
+use App\Game\Model\Trap\CongestionZone;
+use App\Game\Model\Trap\SystemFailure;
+use App\Game\Model\Trap\Trap;
 use App\Game\Model\InteractionObject\Weapon\Weapon;
 use App\Game\Model\Location\Location;
 use App\Game\Model\Robot;
@@ -23,13 +24,18 @@ class RobotService
     /** @var ScriptService $scriptService */
     protected $scriptService;
 
+    /** @var CoordinatesService $coordinatesService */
+    protected $coordinatesService;
+
     /**
      * RobotService constructor.
      * @param ScriptService $scriptService
+     * @param CoordinatesService $coordinatesService
      */
-    public function __construct(ScriptService $scriptService)
+    public function __construct(ScriptService $scriptService, CoordinatesService $coordinatesService)
     {
         $this->scriptService = $scriptService;
+        $this->coordinatesService = $coordinatesService;
     }
 
     /**
@@ -216,5 +222,30 @@ class RobotService
         if ($this->robotHasTrap($robot)) {
 
         }
+    }
+
+
+    /**
+     * @return Coordinates
+     */
+    public function generateCoordinatesForRobot(): Coordinates
+    {
+        /** @var Coordinates $tempCoordinates */
+        $tempCoordinates = null;
+        while (true) {
+            if (is_null($tempCoordinates)) {
+                $x = mt_rand(0, DeadArea::START_SIZE - 1);
+                $y = mt_rand(0, DeadArea::START_SIZE - 1);
+                $tempCoordinates = new Coordinates($x, $y);
+                foreach ($this->occupiedCoordinates as $coordinate) {
+                    if (($coordinate->getX() === $tempCoordinates->getX()) && $coordinate->getY() == $tempCoordinates->getY()) {
+                        $tempCoordinates = null;
+                    }
+                }
+            } else {
+                break;
+            }
+        }
+        return $tempCoordinates;
     }
 }

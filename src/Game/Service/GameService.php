@@ -4,15 +4,8 @@
 namespace App\Game\Service;
 
 
-use App\Game\DTO\CoordinatesDTO;
 use App\Game\DTO\DeadAreaDTO;
-use App\Game\DTO\InteractionObjectDTO;
-use App\Game\DTO\LocationDTO;
-use App\Game\DTO\RobotDTO;
-use App\Game\Model\Coordinates;
 use App\Game\Model\Game;
-use App\Game\Model\InteractionObject\Trap\Breakdown;
-use App\Game\Model\Step;
 
 class GameService
 {
@@ -21,16 +14,22 @@ class GameService
 
     /** var RobotService $robotService */
     protected $robotService;
+    /** var DTOService $dtoService */
+    protected $dtoService;
     /** var LocationService $locationService */
     protected $locationService;
     /** var DeadAreaService $deadAreaService */
     protected $deadAreaService;
+    /** @var CoordinatesService $coordinatesService */
+    protected $coordinatesService;
 
     public function __construct()
     {
-        $this->locationService = new LocationService();
-        $this->deadAreaService = new DeadAreaService();
-        $this->robotService = new RobotService(new ScriptService());
+        $this->dtoService = new DTOService();
+        $this->coordinatesService = new CoordinatesService();
+        $this->locationService = new LocationService($this->coordinatesService);
+        $this->robotService = new RobotService(new ScriptService(), $this->coordinatesService);
+        $this->deadAreaService = new DeadAreaService($this->locationService, $this->robotService, $this->coordinatesService);
         self::$game = $this->getGame();
     }
 
@@ -78,13 +77,14 @@ class GameService
     public function getGame()
     {
         if (is_null(self::$game)) {
-            $locations = $this->locationService->generateLocationsForArea();
+            $locations = $this->deadAreaService->generateLocationsForArea();
 
             self::$game = new Game(
                 $this->deadAreaService->generateDeadArea(
                     $locations,
                     array(),
-                    $this->locationService->generateInteractionObjects($locations)
+                    $this->deadAreaService->generateInteractionObjects($locations),
+                    $this->deadAreaService->generateTraps()
                 )
             );
         }
@@ -100,7 +100,7 @@ class GameService
     {
         $result = false;
         if ($this->robotService->robotScriptCodeIsCorrect($script)) {
-            $robot = $this->robotService->createRobot($nickName, $script, $this->locationService->generateLocationForRobot());
+            $robot = $this->robotService->createRobot($nickName, $script, $this->deadAreaService->generateLocationForRobot());
             if ($this->getGame()->setRobot($robot) > 0) {
                 $result = true;
             }
@@ -108,48 +108,12 @@ class GameService
         return $result;
     }
 
+    /**
+     * @param Game $game
+     * @return DeadAreaDTO
+     */
     public function getGameDTO(Game $game)
     {
-        $locationsDTO = array();
-        $robotsDTO = array();
-        $interactionObjectsDTO = array();
-
-        foreach ($game->getRobots() as $robot) {
-            array_push($robotsDTO,
-                new RobotDTO(
-                    $this->getCoordinatesDTO($robot->getCoordinates()),
-                    $robot->getAuthorNickName(),
-                    $robot->getHealth()
-                )
-            );
-        }
-        foreach ($game->getDeadArea()->getLocations() as $location) {
-            array_push($locationsDTO,
-                new LocationDTO(
-                    $this->getCoordinatesDTO($location->getStartCoordinates()),
-                    $location->getName(),
-                    $location::SIZE
-                )
-            );
-        }
-        foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
-            array_push($interactionObjectsDTO,
-                new InteractionObjectDTO(
-                    $this->getCoordinatesDTO($interactionObject->getCoordinates()),
-                    $interactionObject->getName()
-                )
-            );
-        }
-
-        return new DeadAreaDTO(
-            $interactionObjectsDTO,
-            $robotsDTO,
-            $locationsDTO
-        );
-    }
-
-    private function getCoordinatesDTO(Coordinates $coordinates)
-    {
-        return new CoordinatesDTO($coordinates->getX(), $coordinates->getY());
+        return $this->dtoService->getDeadAreaDTO($game);
     }
 }

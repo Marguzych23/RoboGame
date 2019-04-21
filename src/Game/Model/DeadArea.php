@@ -6,6 +6,7 @@ namespace App\Game\Model;
 
 use App\Game\Model\InteractionObject\InteractionObject;
 use App\Game\Model\Location\Location;
+use App\Game\Model\Trap\Trap;
 
 class DeadArea implements \JsonSerializable
 {
@@ -23,14 +24,18 @@ class DeadArea implements \JsonSerializable
     /** @var InteractionObject[] $interactionObjects */
     protected $interactionObjects;
 
+    /** @var Trap[] $traps */
+    protected $traps;
+
     /**
      * DeadArea constructor.
      * @param array $locations
      * @param array $robots
      * @param array $interactionObjects
+     * @param array $traps
      * @param int $currentStepAreaSize
      */
-    public function __construct(array $locations, array $robots, array $interactionObjects, int $currentStepAreaSize = self::START_SIZE)
+    public function __construct(array $locations, array $robots, array $interactionObjects, array $traps, int $currentStepAreaSize = self::START_SIZE)
     {
         if ($currentStepAreaSize < 1) {
             $currentStepAreaSize = self::START_SIZE;
@@ -39,6 +44,7 @@ class DeadArea implements \JsonSerializable
         $this->locations = $locations;
         $this->robots = $robots;
         $this->interactionObjects = $interactionObjects;
+        $this->traps = $traps;
     }
 
     /**

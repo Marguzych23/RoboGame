@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Game\Model\InteractionObject\Trap;
+namespace App\Game\Model\Trap;
 
 
 use App\Game\Model\Coordinates;
@@ -17,9 +17,7 @@ class CongestionZone extends Trap
      */
     public function __construct(Coordinates $coordinates)
     {
-        parent::__construct($coordinates, self::NAME);
-        $this->actionTime = self::TIME_OF_ACTION;
-        $this->name = self::NAME;
+        parent::__construct($coordinates, self::NAME, self::TIME_OF_ACTION);
     }
 
 }

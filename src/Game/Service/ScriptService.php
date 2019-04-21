@@ -4,17 +4,16 @@
 namespace App\Game\Service;
 
 
-use App\Game\Model\Robot;
+use App\Game\DTO\RobotViewedDeadAreaDTO;
 use App\Game\Model\Step;
 
 class ScriptService
 {
     /**
-     * @param Robot $robot
-     * @param array $opponentsCoordinates
+     * @param RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO
      * @return Step
      */
-    public function getNextRobotStep(Robot $robot, array $opponentsCoordinates = array())
+    public function getNextRobotStep(RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
     {
 //        TODO
         return new Step(null);
@@ -23,8 +22,7 @@ class ScriptService
     /**
      * @param string $script
      * @return bool
-     */
-    public function robotScriptCodeIsCorrect(string $script)
+     */public function robotScriptCodeIsCorrect(string $script)
     {
 //        TODO
         return true;
