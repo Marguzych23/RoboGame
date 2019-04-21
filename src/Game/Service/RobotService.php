@@ -4,6 +4,7 @@
 namespace App\Game\Service;
 
 
+use App\Game\DTO\RobotViewedDeadAreaDTO;
 use App\Game\Model\Coordinates;
 use App\Game\Model\DeadArea;
 use App\Game\Model\Health;
@@ -59,14 +60,13 @@ class RobotService
     }
 
     /**
-     * @param Robot $robot
-     * @param array $opponentsArray
+     * @param RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO
      * @return Step
      */
-    public function getNextRobotStep(Robot &$robot, array $opponentsArray = array())
+    public function getNextRobotStep(RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
     {
         if (!$this->robotHasTrap($robot, CongestionZone::NAME)) {
-            return $this->scriptService->getNextRobotStep($robot, $opponentsArray);
+            return $this->scriptService->getNextRobotStep($robotViewedDeadAreaDTO);
         }
         return new Step(null);
     }
