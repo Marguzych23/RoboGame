@@ -29,6 +29,27 @@ class CoordinatesService
     }
 
     /**
+     * @param Coordinates $coordinates
+     * @param Coordinates $zoneStartCoordinates
+     * @param int $zoneXSize
+     * @param int|null $zoneYSize
+     * @return bool
+     */
+    public function checkCoordinatesOnZone(Coordinates $coordinates, Coordinates $zoneStartCoordinates, int $zoneXSize, int $zoneYSize = null)
+    {
+        $result = false;
+        $zoneYSize = is_null($zoneYSize) ? $zoneXSize : $zoneYSize;
+        if (($coordinates->getX() >= $zoneStartCoordinates->getX())
+            && ($coordinates->getX() < ($zoneStartCoordinates->getX() + $zoneXSize))
+            && ($coordinates->getY() >= $zoneStartCoordinates->getY())
+            && ($coordinates->getY() < ($zoneStartCoordinates->getY() + $zoneYSize))
+        ) {
+            $result = true;
+        }
+        return $result;
+    }
+
+    /**
      * @param Coordinates $locationCoordinates
      * @param int $locationSize
      * @return Coordinates

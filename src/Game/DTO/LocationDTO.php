@@ -12,18 +12,37 @@ class LocationDTO implements \JsonSerializable
     public $name;
     /** @var int $size */
     public $size;
+    /** @var CoordinatesDTO $endCoordinates */
+    public $endCoordinates;
 
     /**
      * LocationDTO constructor.
      * @param CoordinatesDTO $startCoordinates
      * @param string $name
      * @param int $size
+     * @param CoordinatesDTO|null $endCoordinates
      */
-    public function __construct(CoordinatesDTO $startCoordinates, string $name, int $size)
+    public function __construct(CoordinatesDTO $startCoordinates, string $name, int $size, CoordinatesDTO $endCoordinates = null)
     {
         $this->startCoordinates = $startCoordinates;
         $this->name = $name;
         $this->size = $size;
+    }
+
+    /**
+     * @return CoordinatesDTO
+     */
+    public function getEndCoordinates(): CoordinatesDTO
+    {
+        return $this->endCoordinates;
+    }
+
+    /**
+     * @param CoordinatesDTO $endCoordinates
+     */
+    public function setEndCoordinates(CoordinatesDTO $endCoordinates): void
+    {
+        $this->endCoordinates = $endCoordinates;
     }
 
     /**
@@ -87,6 +106,7 @@ class LocationDTO implements \JsonSerializable
             'startCoordinates' => $this->startCoordinates,
             'name' => $this->name,
             'size' => $this->size,
+            'endCoordinates' => $this->endCoordinates,
         );
     }
 }

@@ -89,7 +89,7 @@ class DeadArea implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * @return Robot[]
      */
     public function getRobots(): array
     {

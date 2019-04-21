@@ -6,7 +6,7 @@ namespace App\Game\Model\Location;
 
 use App\Game\Model\Coordinates;
 
-abstract class Location implements \JsonSerializable
+class Location implements \JsonSerializable
 {
     const SIZE = 40;
 
