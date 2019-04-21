@@ -237,7 +237,7 @@ class RobotService
                 $x = mt_rand(0, DeadArea::START_SIZE - 1);
                 $y = mt_rand(0, DeadArea::START_SIZE - 1);
                 $tempCoordinates = new Coordinates($x, $y);
-                foreach ($this->occupiedCoordinates as $coordinate) {
+                foreach ($this->coordinatesService->getOccupiedCoordinates() as $coordinate) {
                     if (($coordinate->getX() === $tempCoordinates->getX()) && $coordinate->getY() == $tempCoordinates->getY()) {
                         $tempCoordinates = null;
                     }
