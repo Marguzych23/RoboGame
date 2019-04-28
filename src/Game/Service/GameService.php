@@ -5,6 +5,7 @@ namespace App\Game\Service;
 
 
 use App\Game\DTO\DeadAreaDTO;
+use App\Game\Model\Coordinates;
 use App\Game\Model\Game;
 use App\Game\Model\Step;
 
@@ -44,23 +45,29 @@ class GameService
     {
         $game = $this->getGame();
         $robots = $game->getRobots();
+
         /** @var Step[] $steps */
         $steps = array();
+
         foreach ($robots as $robot) {
-            $step = $this->robotService->getNextRobotStep($this->dtoService->getRobotViewedDeadAreaDTOForRobot($robot, $game));
+            $step = $this->robotService->getNextRobotStep($this->dtoService->getRobotViewedDeadAreaDTO($robot, $game));
+
             if (is_null($step->getDestination())) {
-                throw new \Exception("Error");
+                throw new \Exception("Destination not found");
             }
+
             array_push($steps, $step);
+
             if (($target = $step->getTarget())->getY() !== -1) {
                 foreach ($robots as $tRobot) {
-                    if (($tRobot->getCoordinates()->getX() === $target->getX())
+                    if (($robot !== $tRobot) && ($tRobot->getCoordinates()->getX() === $target->getX())
                         && ($tRobot->getCoordinates()->getY() === $target->getY())) {
                         $this->robotService->useWeapon($robot, $tRobot);
                     }
                 }
             }
         }
+
 //        for ($i = 0; $i < count($robots); $i++) {
 //            $this->robotService->useTrapIfThisExist($robots[$i]);
 //            foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
@@ -71,6 +78,14 @@ class GameService
 //            }
 //            $this->robotService->useHealthAchieve($robot);
 //        }
+
+        foreach ($robots as $robot) {
+            $step = array_shift($steps);
+            $robot->setCoordinates(new Coordinates(
+                    $step->getDestination()->getX(), $step->getDestination()->getY())
+            );
+        }
+
         return $game;
     }
 

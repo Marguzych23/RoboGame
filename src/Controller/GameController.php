@@ -22,7 +22,7 @@ class GameController extends AbstractController
      */
     public function getDeadArea(Request $request, GameService $gameService)
     {
-//        TODO work this session
+//        TODO work with session
         $nickName = $request->get('nickName', null);
         $nickName = 'Marguzych';
         if (is_null($nickName)) {

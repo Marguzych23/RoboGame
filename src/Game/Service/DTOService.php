@@ -39,7 +39,7 @@ class DTOService
      * @param Game $game
      * @return RobotViewedDeadAreaDTO
      */
-    public function getRobotViewedDeadAreaDTOForRobot(Robot $robot, Game $game)
+    public function getRobotViewedDeadAreaDTO(Robot $robot, Game $game)
     {
         $robotDTO = $this->getRobotDTO($robot);
 
