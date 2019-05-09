@@ -40,8 +40,8 @@ class LocationService
 //        TODO
         $locations = array(
             new DesertArea(new Coordinates(0, 0)),
-            new ElectricEarth(new Coordinates(40, 0)),
-            new RainJungle(new Coordinates(56, 20)),
+            new ElectricEarth(new Coordinates(15, 1)),
+            new RainJungle(new Coordinates(11, 18)),
         );
         return $locations;
     }

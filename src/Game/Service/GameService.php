@@ -50,7 +50,7 @@ class GameService
         $steps = array();
 
         foreach ($robots as $robot) {
-            $step = $this->robotService->getNextRobotStep($this->dtoService->getRobotViewedDeadAreaDTO($robot, $game));
+            $step = $this->robotService->getNextRobotStep($robot, $this->dtoService->getRobotViewedDeadAreaDTO($robot, $game));
 
             if (is_null($step->getDestination())) {
                 throw new \Exception("Destination not found");

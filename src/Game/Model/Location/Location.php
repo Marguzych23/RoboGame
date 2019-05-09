@@ -8,7 +8,7 @@ use App\Game\Model\Coordinates;
 
 class Location implements \JsonSerializable
 {
-    const SIZE = 40;
+    const SIZE = 12;
 
     /** @var Coordinates $startCoordinates */
     protected $startCoordinates;

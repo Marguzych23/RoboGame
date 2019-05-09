@@ -10,7 +10,7 @@ use App\Game\Model\Trap\Trap;
 
 class DeadArea implements \JsonSerializable
 {
-    const START_SIZE = 100;
+    const START_SIZE = 30;
 
     /** @var int $currentStepAreaSize */
     protected $currentStepAreaSize;

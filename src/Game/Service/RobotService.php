@@ -60,14 +60,30 @@ class RobotService
     }
 
     /**
+     * @param Robot $robot
      * @param RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO
      * @return Step
      */
-    public function getNextRobotStep(RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
+    public function getNextRobotStep(Robot $robot, RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
     {
         if (!$this->robotHasTrap($robot, CongestionZone::NAME)) {
-            return $this->scriptService->getNextRobotStep($robotViewedDeadAreaDTO);
+//            TODO searching
+            if ($robot->getScript()->getCode() === 'default') {
+                return $this->getNextDefaultRobotStep($robot, $robotViewedDeadAreaDTO);
+            } else {
+                return $this->scriptService->getNextRobotStep($robotViewedDeadAreaDTO);
+            }
         }
+        return new Step(null);
+    }
+
+    /**
+     * @param Robot $robot
+     * @param RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO
+     * @return Step
+     */
+    public function getNextDefaultRobotStep(Robot $robot, RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
+    {
         return new Step(null);
     }
 
