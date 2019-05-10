@@ -121,6 +121,23 @@ class DeadArea implements \JsonSerializable
     }
 
     /**
+     * @return Trap[]
+     */
+    public function getTraps(): array
+    {
+        return $this->traps;
+    }
+
+    /**
+     * @param Trap[] $traps
+     */
+    public function setTraps(array $traps): void
+    {
+        $this->traps = $traps;
+    }
+
+
+    /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
@@ -134,6 +151,7 @@ class DeadArea implements \JsonSerializable
             'currentStepAreaSize' => $this->currentStepAreaSize,
             'locations' => $this->locations,
             'interactionObjects' => $this->interactionObjects,
+            'traps' => $this->traps,
         );
     }
 }

@@ -24,6 +24,8 @@ class GameService
     protected $deadAreaService;
     /** @var CoordinatesService $coordinatesService */
     protected $coordinatesService;
+    /** @var InteractionObjectService $interactionObjectService */
+    protected $interactionObjectService;
 
     /**
      * GameService constructor.
@@ -32,8 +34,9 @@ class GameService
     {
         $this->dtoService = new DTOService();
         $this->coordinatesService = new CoordinatesService();
+        $this->interactionObjectService = new InteractionObjectService();
         $this->locationService = new LocationService($this->coordinatesService);
-        $this->robotService = new RobotService(new ScriptService(), $this->coordinatesService);
+        $this->robotService = new RobotService(new ScriptService(), $this->coordinatesService, $this->interactionObjectService);
         $this->deadAreaService = new DeadAreaService($this->locationService, $this->robotService, $this->coordinatesService);
         self::$game = $this->getGame();
     }
@@ -57,6 +60,8 @@ class GameService
             }
 
             array_push($steps, $step);
+
+            $this->robotService->useTrapIfThisExist($robot);
 
             if (($target = $step->getTarget())->getY() !== -1) {
                 foreach ($robots as $tRobot) {
@@ -84,6 +89,28 @@ class GameService
             $robot->setCoordinates(new Coordinates(
                     $step->getDestination()->getX(), $step->getDestination()->getY())
             );
+            foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
+                if (($interactionObject->getCoordinates()->getX() === $robot->getCoordinates()->getX())
+                    && ($interactionObject->getCoordinates()->getY() === $robot->getCoordinates()->getY())
+                ) {
+                    $this->robotService->setInteractionObjectForRobot($interactionObject, $robot);
+                    break;
+                }
+            }
+            foreach ($game->getDeadArea()->getLocations() as $location) {
+                if ($this->locationService->coordinatesInLocation($robot->getCoordinates(), $location)) {
+                    $this->robotService->setLocationForRobot($robot, $location);
+                    break;
+                }
+            }
+            foreach ($game->getDeadArea()->getTraps() as $trap) {
+                if (($trap->getCoordinates()->getX() === $robot->getCoordinates()->getX())
+                    && ($trap->getCoordinates()->getY() === $robot->getCoordinates()->getY())
+                ) {
+                    $this->robotService->setTrapForRobot($robot, $trap);
+                    break;
+                }
+            }
         }
 
         return $game;

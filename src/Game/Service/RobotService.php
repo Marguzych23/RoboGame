@@ -10,6 +10,7 @@ use App\Game\Model\DeadArea;
 use App\Game\Model\Health;
 use App\Game\Model\InteractionObject\Armor\Armor;
 use App\Game\Model\InteractionObject\HealthAchievement\HealthAchievement;
+use App\Game\Model\InteractionObject\InteractionObject;
 use App\Game\Model\Trap\Breakdown;
 use App\Game\Model\Trap\CongestionZone;
 use App\Game\Model\Trap\SystemFailure;
@@ -28,6 +29,9 @@ class RobotService
     /** @var CoordinatesService $coordinatesService */
     protected $coordinatesService;
 
+    /** @var InteractionObjectService $interactionObjectService */
+    protected $interactionObjectService;
+
     /** @var array $defaultRobotNames */
     protected $defaultRobotNames = array();
 
@@ -35,14 +39,17 @@ class RobotService
      * RobotService constructor.
      * @param ScriptService $scriptService
      * @param CoordinatesService $coordinatesService
+     * @param InteractionObjectService $interactionObjectService
      */
-    public function __construct(ScriptService $scriptService, CoordinatesService $coordinatesService)
+    public function __construct(ScriptService $scriptService, CoordinatesService $coordinatesService, InteractionObjectService $interactionObjectService)
     {
         $this->scriptService = $scriptService;
         $this->coordinatesService = $coordinatesService;
+        $this->interactionObjectService = $interactionObjectService;
     }
 
 //    Default methods end
+
     /**
      * @param string $nickName
      * @param string $script
@@ -94,6 +101,29 @@ class RobotService
     }
 //    Default methods end
 
+//    Methods with interactionObjects start
+    /**
+     * @param InteractionObject $interactionObject
+     * @param Robot $robot
+     */
+    public function setInteractionObjectForRobot(InteractionObject $interactionObject, Robot $robot)
+    {
+        if ($this->interactionObjectService->isArmor($interactionObject)) {
+            $this->updateArmor($robot);
+        } elseif ($this->interactionObjectService->isWeapon($interactionObject)) {
+            $this->setWeaponForRobot(
+                $robot,
+                $this->interactionObjectService->getWeapon($interactionObject)
+            );
+        } elseif ($this->interactionObjectService->isHealthAchievement($interactionObject)) {
+            $this->useHealthAchievement(
+                $robot,
+                $this->interactionObjectService->getHealthAchievement($interactionObject)
+            );
+        }
+    }
+//    Methods with interactionObjects end
+
 //    Methods with health start
 //    public function useHealthAchieveIfThisNeeded(Robot $robot)
 //    {
@@ -107,7 +137,7 @@ class RobotService
      * @param Robot $robot
      * @param HealthAchievement $healthAchievement
      */
-    public function useHealthAchieve(Robot &$robot, HealthAchievement $healthAchievement)
+    public function useHealthAchievement(Robot &$robot, HealthAchievement $healthAchievement)
     {
         $robotHealth = $robot->getHealth();
         $robotHealth->setValue($robot->getHealth()->getValue() + $healthAchievement->getAchieveValue());
@@ -158,7 +188,7 @@ class RobotService
      */
     public function useWeapon(Robot &$used, Robot &$against)
     {
-        if ($this->robotHasWeapon($used) && ($used->getTrap()->getName() !== SystemFailure::NAME)) {
+        if ($this->robotHasWeapon($used) && ($used->getTrap()->getName() !== CongestionZone::NAME)) {
             $maxDamageWeaponValue = 0;
             $maxDamageWeaponIndex = -1;
             for ($i = 0; $i < count($used->getWeapons()); $i++) {
@@ -180,6 +210,17 @@ class RobotService
     public function robotHasWeapon(Robot &$robot)
     {
         return count($robot->getWeapons()) > 0;
+    }
+
+    /**
+     * @param Robot $robot
+     * @param Weapon $weapon
+     */
+    public function setWeaponForRobot(Robot &$robot, Weapon $weapon)
+    {
+        $weapons = $robot->getWeapons();
+        array_push($weapons, $weapon);
+        $robot->setWeapons($weapons);
     }
 //    Methods with weapons end
 

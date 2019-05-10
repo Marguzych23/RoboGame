@@ -60,6 +60,22 @@ abstract class Trap
         $this->name = $name;
     }
 
+    /**
+     * @return Coordinates
+     */
+    public function getCoordinates(): Coordinates
+    {
+        return $this->coordinates;
+    }
+
+    /**
+     * @param Coordinates $coordinates
+     */
+    public function setCoordinates(Coordinates $coordinates): void
+    {
+        $this->coordinates = $coordinates;
+    }
+
     public function jsonSerialize()
     {
         return array(
