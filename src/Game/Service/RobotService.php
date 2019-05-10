@@ -42,6 +42,7 @@ class RobotService
         $this->coordinatesService = $coordinatesService;
     }
 
+//    Default methods end
     /**
      * @param string $nickName
      * @param string $script
@@ -82,52 +83,6 @@ class RobotService
 
     /**
      * @param Robot $robot
-     * @param RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO
-     * @return Step
-     */
-    public function getNextDefaultRobotStep(Robot $robot, RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
-    {
-        /** @var Step $step */
-        $step = new Step(null);
-        if ($this->robotHasTrap($robot, Breakdown::NAME)) {
-            $step->setDestination($robot->getCoordinates());
-        } else {
-            $x = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getX();
-            $y = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getY();
-            $x = ($x !== 0) ? (($x > 0) ? 1 : -1) : 0;
-            $y = ($y !== 0) ? (($y > 0) ? 1 : -1) : 0;
-            $step->setDestination(
-                new Coordinates(
-                    $robot->getCoordinates()->getX() + $x,
-                    $robot->getCoordinates()->getY() + $y
-                )
-            );
-        }
-        if ($this->robotHasWeapon($robot) && !$this->robotHasTrap($robot, CongestionZone::NAME)) {
-            $dest = ($this->robotHasTrap($robot, SystemFailure::NAME)) ? 1 : 2;
-            foreach ($robotViewedDeadAreaDTO->getRobots() as $tempRobot) {
-                $x = $tempRobot->getCoordinates()->getX() - $robot->getCoordinates()->getX();
-                $y = $tempRobot->getCoordinates()->getY() - $robot->getCoordinates()->getY();
-                if (
-                    ($tempRobot->getName() !== $robot->getAuthorNickName())
-                    && (($x <= $dest) && ($x >= -$dest))
-                    && (($y <= $dest) && ($y >= -$dest))
-                ) {
-                    $step->setTarget(
-                        new Coordinates(
-                            $tempRobot->getCoordinates()->getX(),
-                            $tempRobot->getCoordinates()->getY()
-                        )
-                    );
-                    break;
-                }
-            }
-        }
-        return $step;
-    }
-
-    /**
-     * @param Robot $robot
      * @return bool
      */
     public function robotIsDead(Robot &$robot)
@@ -137,7 +92,9 @@ class RobotService
         }
         return false;
     }
+//    Default methods end
 
+//    Methods with health start
 //    public function useHealthAchieveIfThisNeeded(Robot $robot)
 //    {
 //        if (($robot->getHealth()->getValue() < Health::START_VALUE)
@@ -156,7 +113,9 @@ class RobotService
         $robotHealth->setValue($robot->getHealth()->getValue() + $healthAchievement->getAchieveValue());
         $robot->setHealth($robotHealth);
     }
+//    Methods with health end
 
+//    Methods with armor start
     /**
      * @param Robot $robot
      */
@@ -166,7 +125,9 @@ class RobotService
         $armor->setValue($robot->getArmor()->getValue() + $robot->getArmor()::ITERATION_VALUE);
         $robot->setArmor($armor);
     }
+//    Methods with armor end
 
+//    Methods with weapons start
     /**
      * @param Robot $robot
      * @param Weapon $weapon
@@ -220,16 +181,9 @@ class RobotService
     {
         return count($robot->getWeapons()) > 0;
     }
+//    Methods with weapons end
 
-    /**
-     * @param Robot $robot
-     * @param Trap $trap
-     */
-    public function setTrapForRobot(Robot &$robot, Trap $trap)
-    {
-        $robot->setTrap($trap);
-    }
-
+//    Methods with locations start
     /**
      * @param Robot $robot
      * @param Location $location
@@ -239,6 +193,17 @@ class RobotService
         if (!$this->robotHasTrap($robot, Breakdown::NAME)) {
             $robot->setLocation($location);
         }
+    }
+//    Methods with locations end
+
+//    Methods with traps start
+    /**
+     * @param Robot $robot
+     * @param Trap $trap
+     */
+    public function setTrapForRobot(Robot &$robot, Trap $trap)
+    {
+        $robot->setTrap($trap);
     }
 
     /**
@@ -283,6 +248,54 @@ class RobotService
             }
         }
     }
+//    Methods with traps end
+
+//    Methods with default robot start
+    /**
+     * @param Robot $robot
+     * @param RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO
+     * @return Step
+     */
+    public function getNextDefaultRobotStep(Robot $robot, RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
+    {
+        /** @var Step $step */
+        $step = new Step(null);
+        if ($this->robotHasTrap($robot, Breakdown::NAME)) {
+            $step->setDestination($robot->getCoordinates());
+        } else {
+            $x = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getX();
+            $y = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getY();
+            $x = ($x !== 0) ? (($x > 0) ? 1 : -1) : 0;
+            $y = ($y !== 0) ? (($y > 0) ? 1 : -1) : 0;
+            $step->setDestination(
+                new Coordinates(
+                    $robot->getCoordinates()->getX() + $x,
+                    $robot->getCoordinates()->getY() + $y
+                )
+            );
+        }
+        if ($this->robotHasWeapon($robot) && !$this->robotHasTrap($robot, CongestionZone::NAME)) {
+            $dest = ($this->robotHasTrap($robot, SystemFailure::NAME)) ? 1 : 2;
+            foreach ($robotViewedDeadAreaDTO->getRobots() as $tempRobot) {
+                $x = $tempRobot->getCoordinates()->getX() - $robot->getCoordinates()->getX();
+                $y = $tempRobot->getCoordinates()->getY() - $robot->getCoordinates()->getY();
+                if (
+                    ($tempRobot->getName() !== $robot->getAuthorNickName())
+                    && (($x <= $dest) && ($x >= -$dest))
+                    && (($y <= $dest) && ($y >= -$dest))
+                ) {
+                    $step->setTarget(
+                        new Coordinates(
+                            $tempRobot->getCoordinates()->getX(),
+                            $tempRobot->getCoordinates()->getY()
+                        )
+                    );
+                    break;
+                }
+            }
+        }
+        return $step;
+    }
 
     /**
      * @return string
@@ -314,6 +327,7 @@ class RobotService
     {
         return array_search($robot->getAuthorNickName(), $this->defaultRobotNames) ? true : false;
     }
+//    Methods with default robot end
 
     /**
      * @return Coordinates
