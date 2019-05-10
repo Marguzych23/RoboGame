@@ -73,17 +73,6 @@ class GameService
             }
         }
 
-//        for ($i = 0; $i < count($robots); $i++) {
-//            $this->robotService->useTrapIfThisExist($robots[$i]);
-//            foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
-//                if (($interactionObject->getCoordinates()->getX() === $steps[$i]->getDestination()->getX())
-//                    && ($interactionObject->getCoordinates()->getY() === $steps[$i]->getDestination()->getY())) {
-//
-//                }
-//            }
-//            $this->robotService->useHealthAchieve($robot);
-//        }
-
         foreach ($robots as $robot) {
             $step = array_shift($steps);
             $robot->setCoordinates(new Coordinates(
