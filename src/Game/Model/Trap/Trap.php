@@ -5,7 +5,7 @@ namespace App\Game\Model\Trap;
 
 use App\Game\Model\Coordinates;
 
-abstract class Trap
+abstract class Trap implements \JsonSerializable
 {
     /** @var int $actionTime */
     protected $actionTime;
