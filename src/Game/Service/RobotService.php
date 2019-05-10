@@ -28,6 +28,7 @@ class RobotService
     /** @var CoordinatesService $coordinatesService */
     protected $coordinatesService;
 
+    /** @var array $defaultRobotNames */
     protected $defaultRobotNames = array();
 
     /**
