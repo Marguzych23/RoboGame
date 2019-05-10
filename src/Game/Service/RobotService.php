@@ -28,6 +28,8 @@ class RobotService
     /** @var CoordinatesService $coordinatesService */
     protected $coordinatesService;
 
+    protected $defaultRobotNames = array();
+
     /**
      * RobotService constructor.
      * @param ScriptService $scriptService
@@ -66,15 +68,15 @@ class RobotService
      */
     public function getNextRobotStep(Robot $robot, RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
     {
-        if (!$this->robotHasTrap($robot, CongestionZone::NAME)) {
-//            TODO searching
-            if ($robot->getScript()->getCode() === 'default') {
+        if (!($this->robotHasTrap($robot, CongestionZone::NAME) && $this->robotHasTrap($robot, Breakdown::NAME))) {
+            if ($this->robotIsDefault($robot)) {
                 return $this->getNextDefaultRobotStep($robot, $robotViewedDeadAreaDTO);
             } else {
                 return $this->scriptService->getNextRobotStep($robotViewedDeadAreaDTO);
             }
+        } else {
+            return new Step($robot->getCoordinates());
         }
-        return new Step(null);
     }
 
     /**
@@ -84,7 +86,43 @@ class RobotService
      */
     public function getNextDefaultRobotStep(Robot $robot, RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
     {
-        return new Step(null);
+        /** @var Step $step */
+        $step = new Step(null);
+        if ($this->robotHasTrap($robot, Breakdown::NAME)) {
+            $step->setDestination($robot->getCoordinates());
+        } else {
+            $x = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getX();
+            $y = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getY();
+            $x = ($x !== 0) ? (($x > 0) ? 1 : -1) : 0;
+            $y = ($y !== 0) ? (($y > 0) ? 1 : -1) : 0;
+            $step->setDestination(
+                new Coordinates(
+                    $robot->getCoordinates()->getX() + $x,
+                    $robot->getCoordinates()->getY() + $y
+                )
+            );
+        }
+        if ($this->robotHasWeapon($robot) && !$this->robotHasTrap($robot, CongestionZone::NAME)) {
+            $dest = ($this->robotHasTrap($robot, SystemFailure::NAME)) ? 1 : 2;
+            foreach ($robotViewedDeadAreaDTO->getRobots() as $tempRobot) {
+                $x = $tempRobot->getCoordinates()->getX() - $robot->getCoordinates()->getX();
+                $y = $tempRobot->getCoordinates()->getY() - $robot->getCoordinates()->getY();
+                if (
+                    ($tempRobot->getName() !== $robot->getAuthorNickName())
+                    && (($x <= $dest) && ($x >= -$dest))
+                    && (($y <= $dest) && ($y >= -$dest))
+                ) {
+                    $step->setTarget(
+                        new Coordinates(
+                            $tempRobot->getCoordinates()->getX(),
+                            $tempRobot->getCoordinates()->getY()
+                        )
+                    );
+                    break;
+                }
+            }
+        }
+        return $step;
     }
 
     /**
@@ -233,13 +271,48 @@ class RobotService
         }
     }
 
+    /**
+     * @param Robot $robot
+     */
     public function useTrapIfThisExist(Robot $robot)
     {
         if ($this->robotHasTrap($robot)) {
-
+            if ($this->robotHasTrap($robot, Breakdown::NAME) && $robot->getTrap()->getActionTime() === Breakdown::TIME_OF_ACTION) {
+                $robot->getArmor()->setValue($robot->getArmor()->getValue() * 2);
+            }
         }
     }
 
+    /**
+     * @return string
+     */
+    public function generateDefaultRobotName(): string
+    {
+        $robotName = '';
+        while (true) {
+            $characters = '0123456789';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < 4; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            $robotName = 'default' . $randomString;
+            if (!array_search($robotName, $this->defaultRobotNames)) {
+                break;
+            }
+        }
+        array_push($this->defaultRobotNames, $robotName);
+        return $robotName;
+    }
+
+    /**
+     * @param Robot $robot
+     * @return bool
+     */
+    public function robotIsDefault(Robot $robot): bool
+    {
+        return array_search($robot->getAuthorNickName(), $this->defaultRobotNames) ? true : false;
+    }
 
     /**
      * @return Coordinates
