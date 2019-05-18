@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class GameController extends AbstractController
 {
 
-    protected $marguzych= 'defaultMarguzych';
+    protected $marguzych = 'defaultMarguzych';
 
     /**
      * @Route("/game", name="game", methods={"POST", "GET"})
@@ -69,5 +69,27 @@ class GameController extends AbstractController
             ));
         }
         return new JsonResponse($gameService->getGameDTO($gameService->getNextStepGame()), 200, array(), true);
+    }
+
+    /**
+     * @Route("/game/reset", name="reset_game", methods={"GET", "POST"})
+     * @param Request $request
+     * @param GameService $gameService
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function resetGame(Request $request, GameService $gameService)
+    {
+        $nickName = $request->get('nickName', $this->marguzych);
+        if (is_null($nickName)) {
+            return new JsonResponse(array(
+                'result' => false
+            ));
+        }
+        return new JsonResponse(
+            array(
+                'result' => $gameService->resetGame()
+            )
+        );
     }
 }

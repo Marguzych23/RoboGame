@@ -46,6 +46,14 @@ class GameService
     }
 
     /**
+     * @return bool|int
+     */
+    public function resetGame()
+    {
+        return $this->gameInstanceService->deleteGame();
+    }
+
+    /**
      * @throws \Exception
      */
     public function getNextStepGame()
