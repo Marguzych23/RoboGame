@@ -26,6 +26,8 @@ class GameService
     protected $coordinatesService;
     /** @var InteractionObjectService $interactionObjectService */
     protected $interactionObjectService;
+    /** @var GameInstanceService $gameInstanceService */
+    protected $gameInstanceService;
 
     /**
      * GameService constructor.
@@ -33,6 +35,7 @@ class GameService
     public function __construct()
     {
         $this->dtoService = new DTOService();
+        $this->gameInstanceService = new GameInstanceService();
         $this->coordinatesService = new CoordinatesService();
         $this->interactionObjectService = new InteractionObjectService();
         $this->locationService = new LocationService($this->coordinatesService);
@@ -110,7 +113,7 @@ class GameService
      */
     public function getGame()
     {
-        if (is_null(self::$game)) {
+        if ($this->gameInstanceService->checkGame() === false) {
             $locations = $this->deadAreaService->generateLocationsForArea();
 
             self::$game = new Game(
@@ -121,8 +124,24 @@ class GameService
                     $this->deadAreaService->generateTraps()
                 )
             );
+            $this->gameInstanceService->saveGame(self::$game);
+        } else {
+            self::$game = $this->gameInstanceService->getGame();
         }
         return self::$game;
+//        if (is_null(self::$game)) {
+//            $locations = $this->deadAreaService->generateLocationsForArea();
+//
+//            self::$game = new Game(
+//                $this->deadAreaService->generateDeadArea(
+//                    $locations,
+//                    array(),
+//                    $this->deadAreaService->generateInteractionObjects($locations),
+//                    $this->deadAreaService->generateTraps()
+//                )
+//            );
+//        }
+//        return self::$game;
     }
 
     /**
@@ -139,6 +158,7 @@ class GameService
                 $result = true;
             }
         }
+        $this->gameInstanceService->saveGame($this->getGame());
         return $result;
     }
 

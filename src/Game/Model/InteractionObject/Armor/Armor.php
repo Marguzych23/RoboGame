@@ -19,11 +19,12 @@ class Armor extends InteractionObject
     /**
      * Armor constructor.
      * @param Coordinates $coordinates
+     * @param int $value
      */
-    public function __construct(Coordinates $coordinates)
+    public function __construct(Coordinates $coordinates, $value = self::MIN_VALUE)
     {
         parent::__construct($coordinates, self::NAME);
-        $this->value = self::MIN_VALUE;
+        $this->value = $value;
     }
 
     /**
@@ -55,6 +56,12 @@ class Armor extends InteractionObject
     public function jsonSerialize()
     {
         $jsonSerializeArray = parent::jsonSerialize();
-        return array_merge($jsonSerializeArray, array('value' => $this->value));
+        return array_merge(
+            $jsonSerializeArray,
+            array(
+                'name' => $this->name,
+                'value' => $this->value
+            )
+        );
     }
 }

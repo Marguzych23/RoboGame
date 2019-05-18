@@ -14,11 +14,12 @@ class Game implements \JsonSerializable
     /**
      * Game constructor.
      * @param DeadArea $deadArea
+     * @param int $gameStepNumber
      */
-    public function __construct(DeadArea $deadArea)
+    public function __construct(DeadArea $deadArea, $gameStepNumber = 0)
     {
         $this->deadArea = $deadArea;
-        $this->gameStepNumber = 0;
+        $this->gameStepNumber = $gameStepNumber;
     }
 
     /**

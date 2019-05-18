@@ -14,10 +14,11 @@ class Breakdown extends Trap
     /**
      * Breakdown constructor.
      * @param Coordinates $coordinates
+     * @param int $timeOfAction
      */
-    public function __construct(Coordinates $coordinates)
+    public function __construct(Coordinates $coordinates, $timeOfAction = self::TIME_OF_ACTION)
     {
-        parent::__construct($coordinates, self::NAME, self::TIME_OF_ACTION);
+        parent::__construct($coordinates, self::NAME, $timeOfAction);
     }
 
 }

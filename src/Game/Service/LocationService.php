@@ -97,7 +97,7 @@ class LocationService
                     }
             }
             $this->getInteractionObjectsForLocation($tempInteractionObjects, $location);
-            array_push($interactionObjects, $tempInteractionObjects);
+            $interactionObjects = array_merge($interactionObjects, $tempInteractionObjects);
         }
         return $interactionObjects;
     }

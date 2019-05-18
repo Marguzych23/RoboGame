@@ -43,8 +43,10 @@ class Robot implements \JsonSerializable
      * @param Health|null $health
      * @param array $weapons
      * @param Armor|null $armor
+     * @param Location|null $location
+     * @param Trap|null $trap
      */
-    public function __construct(string $authorNickName, Script $script, Coordinates $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null)
+    public function __construct(string $authorNickName, Script $script, Coordinates $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null, Location $location = null, Trap $trap = null)
     {
         if (is_null($health)) {
             $health = new Health();
@@ -61,6 +63,12 @@ class Robot implements \JsonSerializable
         $this->health = $health;
         $this->weapons = $weapons;
         $this->armor = $armor;
+        if (!is_null($location)) {
+            $this->location = $location;
+        }
+        if (!is_null($trap)) {
+            $this->trap = $trap;
+        }
     }
 
     /**

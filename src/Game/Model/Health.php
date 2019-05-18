@@ -11,9 +11,9 @@ class Health implements \JsonSerializable
 
     protected $value;
 
-    public function __construct()
+    public function __construct($value = self::START_VALUE)
     {
-        $this->value = self::START_VALUE;
+        $this->value = $value;
     }
 
     /**
