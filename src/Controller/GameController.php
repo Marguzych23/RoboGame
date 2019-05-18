@@ -44,13 +44,14 @@ class GameController extends AbstractController
                 ));
             }
         }
-        return $this->render(
-            'game/index.html.twig',
-            array(
-                'nickName' => $nickName,
-                'game' => json_encode($gameService->getGameDTO($gameService->getGame()), JSON_UNESCAPED_UNICODE),
-            )
+
+        return new JsonResponse(
+            $gameService->getGameDTO($gameService->getGame()),
+            200,
+            array(),
+            true
         );
+
     }
 
     /**
@@ -68,7 +69,12 @@ class GameController extends AbstractController
                 'result' => false
             ));
         }
-        return new JsonResponse($gameService->getGameDTO($gameService->getNextStepGame()), 200, array(), true);
+        return new JsonResponse(
+            $gameService->getGameDTO($gameService->getNextStepGame()),
+            200,
+            array(),
+            true
+        );
     }
 
     /**
@@ -87,9 +93,12 @@ class GameController extends AbstractController
             ));
         }
         return new JsonResponse(
-            array(
+            json_encode(array(
                 'result' => $gameService->resetGame()
-            )
+            )),
+            200,
+            array(),
+            true
         );
     }
 }

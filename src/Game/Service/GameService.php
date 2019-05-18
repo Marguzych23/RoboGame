@@ -67,7 +67,7 @@ class GameService
         foreach ($robots as $robot) {
             $step = $this->robotService->getNextRobotStep($robot, $this->dtoService->getRobotViewedDeadAreaDTO($robot, $game));
 
-            if (is_null($step->getDestination())) {
+            if ($step->getDestination()->getX() === 0 & $step->getDestination()->getY() === 0) {
                 throw new \Exception("Destination not found");
             }
 
@@ -87,8 +87,10 @@ class GameService
 
         foreach ($robots as $robot) {
             $step = array_shift($steps);
-            $robot->setCoordinates(new Coordinates(
-                    $step->getDestination()->getX(), $step->getDestination()->getY())
+            $robot->setCoordinates(
+                new Coordinates(
+                    $step->getDestination()->getX(), $step->getDestination()->getY()
+                )
             );
             foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
                 if (($interactionObject->getCoordinates()->getX() === $robot->getCoordinates()->getX())
@@ -98,12 +100,19 @@ class GameService
                     break;
                 }
             }
+
+            $noLocaltion = true;
             foreach ($game->getDeadArea()->getLocations() as $location) {
                 if ($this->locationService->coordinatesInLocation($robot->getCoordinates(), $location)) {
                     $this->robotService->setLocationForRobot($robot, $location);
+                    $noLocaltion = false;
                     break;
                 }
             }
+            if ($noLocaltion === true) {
+                $this->robotService->setLocationForRobot($robot, null);
+            }
+
             foreach ($game->getDeadArea()->getTraps() as $trap) {
                 if (($trap->getCoordinates()->getX() === $robot->getCoordinates()->getX())
                     && ($trap->getCoordinates()->getY() === $robot->getCoordinates()->getY())
@@ -133,12 +142,25 @@ class GameService
             $locations = $this->deadAreaService->generateLocationsForArea();
             $robots = array();
             for ($i = 0; $i < 3; $i++) {
+                $robotCoordinates = $this->coordinatesService->generateCoordinates(0, DeadArea::START_SIZE - 1, 0, DeadArea::START_SIZE - 1);
+                $robotLocation = null;
+                foreach ($locations as $location) {
+                    if (
+                        ($location->getStartCoordinates()->getX() <= $robotCoordinates->getX())
+                        && ($location->getStartCoordinates()->getY() <= $robotCoordinates->getY())
+                        && ($location->getStartCoordinates()->getX() + $location->getSize() >= $robotCoordinates->getX())
+                        && ($location->getStartCoordinates()->getY() + $location->getSize() >= $robotCoordinates->getY())
+                    ) {
+                        $robotLocation = $location;
+                    }
+                }
                 array_push(
                     $robots,
                     $this->robotService->createRobot(
                         $this->robotService->generateDefaultRobotName(),
                         'DEFAULT_ROBOT_CODE',
-                        $this->coordinatesService->generateCoordinates(0, DeadArea::START_SIZE - 1, 0, DeadArea::START_SIZE - 1)
+                        $robotCoordinates,
+                        $robotLocation
                     )
                 );
             }
@@ -167,7 +189,25 @@ class GameService
     {
         $result = false;
         if ($this->robotService->robotScriptCodeIsCorrect($script)) {
-            $robot = $this->robotService->createRobot($nickName, $script, $this->deadAreaService->generateCoordinatesForRobot());
+            $robotCoordinates = $this->coordinatesService->generateCoordinates(0, DeadArea::START_SIZE - 1, 0, DeadArea::START_SIZE - 1);
+            $robotLocation = null;
+            $locations = $this->getGame()->getDeadArea()->getLocations();
+            foreach ($locations as $location) {
+                if (
+                    ($location->getStartCoordinates()->getX() <= $robotCoordinates->getX())
+                    && ($location->getStartCoordinates()->getY() <= $robotCoordinates->getY())
+                    && ($location->getStartCoordinates()->getX() + $location->getSize() >= $robotCoordinates->getX())
+                    && ($location->getStartCoordinates()->getY() + $location->getSize() >= $robotCoordinates->getY())
+                ) {
+                    $robotLocation = $location;
+                }
+            }
+            $robot = $this->robotService->createRobot(
+                $nickName,
+                $script,
+                $this->deadAreaService->generateCoordinatesForRobot(),
+                $robotLocation
+            );
             if ($this->getGame()->setRobot($robot) > 0) {
                 $this->gameInstanceService->saveGame($this->getGame());
                 $result = true;

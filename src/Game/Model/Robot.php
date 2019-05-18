@@ -178,7 +178,7 @@ class Robot implements \JsonSerializable
     /**
      * @param Location $location
      */
-    public function setLocation(Location $location): void
+    public function setLocation(Location $location = null): void
     {
         $this->location = $location;
     }

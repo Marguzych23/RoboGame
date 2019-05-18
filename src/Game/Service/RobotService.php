@@ -54,11 +54,12 @@ class RobotService
      * @param string $nickName
      * @param string $script
      * @param Coordinates $coordinates
+     * @param Location|null $location
      * @return Robot
      */
-    public function createRobot(string $nickName, string $script, Coordinates $coordinates): Robot
+    public function createRobot(string $nickName, string $script, Coordinates $coordinates, Location $location = null): Robot
     {
-        return new Robot($nickName, new Script($script), $coordinates);
+        return new Robot($nickName, new Script($script), $coordinates, null, array(), null, $location);
     }
 
     /**
@@ -229,7 +230,7 @@ class RobotService
      * @param Robot $robot
      * @param Location $location
      */
-    public function setLocationForRobot(Robot &$robot, Location $location)
+    public function setLocationForRobot(Robot &$robot, Location $location = null)
     {
         if (!$this->robotHasTrap($robot, Breakdown::NAME)) {
             $robot->setLocation($location);
