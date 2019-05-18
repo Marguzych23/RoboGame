@@ -134,7 +134,9 @@ class DTOService
             $this->getCoordinatesDTO($robot->getCoordinates()),
             $robot->getAuthorNickName(),
             $robot->getHealth()->getValue(),
-            $robot->getScript()->getCode()
+            $robot->getScript()->getCode(),
+            $robot->getArmor()->getValue(),
+            (is_null($robot->getTrap()) ? '' : $robot->getTrap()->getName())
         );
     }
 
