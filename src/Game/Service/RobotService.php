@@ -302,7 +302,7 @@ class RobotService
     public function getNextDefaultRobotStep(Robot $robot, RobotViewedDeadAreaDTO $robotViewedDeadAreaDTO)
     {
         /** @var Step $step */
-        $step = new Step(null);
+        $step = new Step($robot->getCoordinates());
         if ($this->robotHasTrap($robot, Breakdown::NAME)) {
             $step->setDestination($robot->getCoordinates());
         } else {
@@ -368,7 +368,13 @@ class RobotService
      */
     public function robotIsDefault(Robot $robot): bool
     {
-        return array_search($robot->getAuthorNickName(), $this->defaultRobotNames) ? true : false;
+        return (
+        (
+//                array_search($robot->getAuthorNickName(), $this->defaultRobotNames) ||
+            strpos($robot->getAuthorNickName(), 'default') !== false
+        )
+            ? true : false
+        );
     }
 //    Methods with default robot end
 

@@ -14,6 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class GameController extends AbstractController
 {
 
+    protected $marguzych= 'defaultMarguzych';
+
     /**
      * @Route("/game", name="game", methods={"POST", "GET"})
      * @param Request $request
@@ -24,7 +26,7 @@ class GameController extends AbstractController
     {
         $nickName = $request->get('nickName', null);
         if ($gameService->gameIsStarted() == false) {
-            $nickName = 'Marguzych';
+            $nickName = $this->marguzych;
             if (is_null($nickName)) {
                 return $this->redirectToRoute("login");
             }
@@ -60,7 +62,7 @@ class GameController extends AbstractController
      */
     public function getNextStep(Request $request, GameService $gameService)
     {
-        $nickName = $request->get('nickName', 'Marguzych');
+        $nickName = $request->get('nickName', $this->marguzych);
         if (is_null($nickName)) {
             return new JsonResponse(array(
                 'result' => false
