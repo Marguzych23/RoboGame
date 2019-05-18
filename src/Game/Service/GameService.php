@@ -101,15 +101,16 @@ class GameService
                 }
             }
 
-            $noLocaltion = true;
+            $noLocation = true;
             foreach ($game->getDeadArea()->getLocations() as $location) {
+                print_r('1_');
                 if ($this->locationService->coordinatesInLocation($robot->getCoordinates(), $location)) {
                     $this->robotService->setLocationForRobot($robot, $location);
-                    $noLocaltion = false;
+                    $noLocation = false;
                     break;
                 }
             }
-            if ($noLocaltion === true) {
+            if ($noLocation === true) {
                 $this->robotService->setLocationForRobot($robot, null);
             }
 

@@ -39,6 +39,14 @@ class LocationService
      */
     public function coordinatesInLocation(Coordinates $coordinates, Location $location): bool
     {
+        if (
+            ($location->getStartCoordinates()->getX() <= $coordinates->getX())
+            && ($location->getStartCoordinates()->getY() <= $coordinates->getY())
+            && ($location->getStartCoordinates()->getX() + $location->getSize() >= $coordinates->getX())
+            && ($location->getStartCoordinates()->getY() + $location->getSize() >= $coordinates->getY())
+        ) {
+            return true;
+        }
         return false;
     }
 
