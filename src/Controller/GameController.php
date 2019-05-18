@@ -22,38 +22,37 @@ class GameController extends AbstractController
      */
     public function getDeadArea(Request $request, GameService $gameService)
     {
-////        TODO work with session
-//        $nickName = $request->get('nickName', null);
-//        $nickName = 'Marguzych';
-//        if (is_null($nickName)) {
-//            return $this->redirectToRoute("login");
-//        }
-//        $script = $request->get('script', null);
-//        $script = 'code';
-//        if (is_null($script)) {
-//            return $this->redirectToRoute('homepage', array('nickName' => $nickName));
-//        }
-//
-//        $robotIsCreated = $gameService->setRobot($nickName, $script);
-//
-//        if ($robotIsCreated === false) {
-//            return new JsonResponse(array(
-//                'result' => false
-//            ));
-//        }
+        $nickName = $request->get('nickName', null);
+        if ($gameService->gameIsStarted() == false) {
+            $nickName = 'Marguzych';
+            if (is_null($nickName)) {
+                return $this->redirectToRoute("login");
+            }
+            $script = $request->get('script', null);
+            $script = 'code';
+            if (is_null($script)) {
+                return $this->redirectToRoute('homepage', array('nickName' => $nickName));
+            }
 
+            $robotIsCreated = $gameService->setRobot($nickName, $script);
+
+            if ($robotIsCreated === false) {
+                return new JsonResponse(array(
+                    'result' => false
+                ));
+            }
+        }
         return $this->render(
             'game/index.html.twig',
             array(
-//                'nickName' => $nickName,
-                'game' => json_encode($gameService->getGame(), JSON_UNESCAPED_UNICODE),
-//                'game' => $gameService->getGame(),
+                'nickName' => $nickName,
+                'game' => json_encode($gameService->getGameDTO($gameService->getGame()), JSON_UNESCAPED_UNICODE),
             )
         );
     }
 
     /**
-     * @Route("/game/get_next_step", name="get_next_step_game", methods={"POST"})
+     * @Route("/game/get_next_step", name="get_next_step_game", methods={"GET", "POST"})
      * @param Request $request
      * @param GameService $gameService
      * @return JsonResponse
@@ -61,12 +60,12 @@ class GameController extends AbstractController
      */
     public function getNextStep(Request $request, GameService $gameService)
     {
-        $game = $request->get('game', null);
-        if (is_null($game)) {
+        $nickName = $request->get('nickName', 'Marguzych');
+        if (is_null($nickName)) {
             return new JsonResponse(array(
                 'result' => false
             ));
         }
-        return new JsonResponse(json_encode($gameService->getNextStepGame(), JSON_UNESCAPED_UNICODE));
+        return new JsonResponse($gameService->getGameDTO($gameService->getNextStepGame()), 200, array(), true);
     }
 }

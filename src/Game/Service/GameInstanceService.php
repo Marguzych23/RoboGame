@@ -99,7 +99,10 @@ class GameInstanceService
 
                     $script = new Script($robot['script']['code']);
 
-                    $health = new Health($robot['health']['value']);
+                    $health = null;
+                    if (isset($robot['health']['value'])) {
+                        $health = new Health($robot['health']['value']);
+                    }
 
                     $weapons = array();
                     $weaponsArray = $robot['weapons'];
@@ -134,46 +137,50 @@ class GameInstanceService
                     $armor = new Armor(new Coordinates($robot['coordinates']['x'], $robot['coordinates']['y']), $robot['armor']['value']);
 
                     $locationObject = null;
-                    $location = $robot['location'];
-                    $locationCoordinates = new Coordinates($location['startCoordinates']['x'], $location['startCoordinates']['y']);
-                    switch ($location['name']) {
-                        case DesertArea::NAME:
-                            {
-                                $locationObject = new DesertArea($locationCoordinates);
-                                break;
-                            }
-                        case ElectricEarth::NAME:
-                            {
-                                $locationObject = new ElectricEarth($locationCoordinates);
-                                break;
-                            }
-                        case RainJungle::NAME:
-                            {
-                                $locationObject = new RainJungle($locationCoordinates);
-                                break;
-                            }
+                    if (!is_null($robot['location'])) {
+                        $location = $robot['location'];
+                        $locationCoordinates = new Coordinates($location['startCoordinates']['x'], $location['startCoordinates']['y']);
+                        switch ($location['name']) {
+                            case DesertArea::NAME:
+                                {
+                                    $locationObject = new DesertArea($locationCoordinates);
+                                    break;
+                                }
+                            case ElectricEarth::NAME:
+                                {
+                                    $locationObject = new ElectricEarth($locationCoordinates);
+                                    break;
+                                }
+                            case RainJungle::NAME:
+                                {
+                                    $locationObject = new RainJungle($locationCoordinates);
+                                    break;
+                                }
+                        }
                     }
 
                     $trapsObject = null;
-                    $trap = $robot['trap'];
-                    $timeOfAction = $trap['actionTime'];
-                    $trapCoordinates = new Coordinates($trap['coordinates']['x'], $trap['coordinates']['y']);
-                    switch ($trap['name']) {
-                        case Breakdown::NAME:
-                            {
-                                $trapsObject = new Breakdown($trapCoordinates, $timeOfAction);
-                                break;
-                            }
-                        case CongestionZone::NAME:
-                            {
-                                $trapsObject = new CongestionZone($trapCoordinates, $timeOfAction);
-                                break;
-                            }
-                        case SystemFailure::NAME:
-                            {
-                                $trapsObject = new SystemFailure($trapCoordinates, $timeOfAction);
-                                break;
-                            }
+                    if (is_null(['trap'])) {
+                        $trap = $robot['trap'];
+                        $timeOfAction = $trap['actionTime'];
+                        $trapCoordinates = new Coordinates($trap['coordinates']['x'], $trap['coordinates']['y']);
+                        switch ($trap['name']) {
+                            case Breakdown::NAME:
+                                {
+                                    $trapsObject = new Breakdown($trapCoordinates, $timeOfAction);
+                                    break;
+                                }
+                            case CongestionZone::NAME:
+                                {
+                                    $trapsObject = new CongestionZone($trapCoordinates, $timeOfAction);
+                                    break;
+                                }
+                            case SystemFailure::NAME:
+                                {
+                                    $trapsObject = new SystemFailure($trapCoordinates, $timeOfAction);
+                                    break;
+                                }
+                        }
                     }
 
                     array_push(
@@ -287,8 +294,7 @@ class GameInstanceService
     /**
      * @return bool
      */
-    public
-    function checkGame()
+    public function checkGame()
     {
         $result = file_get_contents($this->filePath);
         return strlen($result) !== 0;
@@ -297,8 +303,7 @@ class GameInstanceService
     /**
      * @return bool|int
      */
-    public
-    function deleteGame()
+    public function deleteGame()
     {
         return file_put_contents($this->filePath, '');
     }

@@ -154,7 +154,7 @@ class Robot implements \JsonSerializable
     /**
      * @return Trap
      */
-    public function getTrap(): Trap
+    public function getTrap()
     {
         return $this->trap;
     }
@@ -209,6 +209,7 @@ class Robot implements \JsonSerializable
     public function jsonSerialize()
     {
         return array(
+            'authorNickName' => $this->authorNickName,
             'coordinates' => $this->coordinates,
             'script' => $this->script,
             'location' => $this->location,

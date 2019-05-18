@@ -89,4 +89,9 @@ class DeadAreaDTO implements \JsonSerializable
             'interactionObjects' => $this->interactionObjects,
         );
     }
+
+    public function __toString()
+    {
+        return json_encode($this->jsonSerialize(), JSON_UNESCAPED_UNICODE);
+    }
 }

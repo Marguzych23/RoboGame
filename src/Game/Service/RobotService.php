@@ -254,7 +254,9 @@ class RobotService
      */
     public function robotHasTrap(Robot &$robot, string $trapName = null)
     {
-        if (is_null($trapName)) {
+        if (is_null($robot->getTrap())) {
+            return false;
+        } elseif (is_null($trapName)) {
             return ($robot->getTrap()->getActionTime() > 0);
         }
         return ($robot->getTrap()->getActionTime() > 0) && ($trapName === $robot->getTrap()->getName());

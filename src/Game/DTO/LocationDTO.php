@@ -27,6 +27,7 @@ class LocationDTO implements \JsonSerializable
         $this->startCoordinates = $startCoordinates;
         $this->name = $name;
         $this->size = $size;
+        $this->endCoordinates = $endCoordinates;
     }
 
     /**

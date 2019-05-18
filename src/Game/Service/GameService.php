@@ -6,7 +6,9 @@ namespace App\Game\Service;
 
 use App\Game\DTO\DeadAreaDTO;
 use App\Game\Model\Coordinates;
+use App\Game\Model\DeadArea;
 use App\Game\Model\Game;
+use App\Game\Model\Robot;
 use App\Game\Model\Step;
 
 class GameService
@@ -41,7 +43,6 @@ class GameService
         $this->locationService = new LocationService($this->coordinatesService);
         $this->robotService = new RobotService(new ScriptService(), $this->coordinatesService, $this->interactionObjectService);
         $this->deadAreaService = new DeadAreaService($this->locationService, $this->robotService, $this->coordinatesService);
-        self::$game = $this->getGame();
     }
 
     /**
@@ -105,7 +106,14 @@ class GameService
             }
         }
 
+        $this->gameInstanceService->saveGame($game);
+
         return $game;
+    }
+
+    public function gameIsStarted()
+    {
+        return $this->gameInstanceService->checkGame();
     }
 
     /**
@@ -113,35 +121,33 @@ class GameService
      */
     public function getGame()
     {
-        if ($this->gameInstanceService->checkGame() === false) {
+        if (self::$game === null && $this->gameInstanceService->checkGame() === false) {
             $locations = $this->deadAreaService->generateLocationsForArea();
+            $robots = array();
+            for ($i = 0; $i < 3; $i++) {
+                array_push(
+                    $robots,
+                    $this->robotService->createRobot(
+                        $this->robotService->generateDefaultRobotName(),
+                        'DEFAULT_ROBOT_CODE',
+                        $this->coordinatesService->generateCoordinates(0, DeadArea::START_SIZE - 1, 0, DeadArea::START_SIZE - 1)
+                    )
+                );
+            }
 
             self::$game = new Game(
                 $this->deadAreaService->generateDeadArea(
                     $locations,
-                    array(),
+                    $robots,
                     $this->deadAreaService->generateInteractionObjects($locations),
                     $this->deadAreaService->generateTraps()
                 )
             );
             $this->gameInstanceService->saveGame(self::$game);
-        } else {
+        } else if (self::$game === null) {
             self::$game = $this->gameInstanceService->getGame();
         }
         return self::$game;
-//        if (is_null(self::$game)) {
-//            $locations = $this->deadAreaService->generateLocationsForArea();
-//
-//            self::$game = new Game(
-//                $this->deadAreaService->generateDeadArea(
-//                    $locations,
-//                    array(),
-//                    $this->deadAreaService->generateInteractionObjects($locations),
-//                    $this->deadAreaService->generateTraps()
-//                )
-//            );
-//        }
-//        return self::$game;
     }
 
     /**
@@ -155,10 +161,10 @@ class GameService
         if ($this->robotService->robotScriptCodeIsCorrect($script)) {
             $robot = $this->robotService->createRobot($nickName, $script, $this->deadAreaService->generateCoordinatesForRobot());
             if ($this->getGame()->setRobot($robot) > 0) {
+                $this->gameInstanceService->saveGame($this->getGame());
                 $result = true;
             }
         }
-        $this->gameInstanceService->saveGame($this->getGame());
         return $result;
     }
 

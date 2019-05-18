@@ -149,7 +149,7 @@ class DTOService
             $this->getCoordinatesDTO($location->getStartCoordinates()),
             $location->getName(),
             $location::SIZE,
-            $endCoordinates
+            (!is_null($endCoordinates)) ? $this->getCoordinatesDTO($endCoordinates) : null
         );
     }
 

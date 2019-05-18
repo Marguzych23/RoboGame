@@ -39,6 +39,7 @@ class LocationService
      */
     public function coordinatesInLocation(Coordinates $coordinates, Location $location): bool
     {
+        return false;
     }
 
     /**
