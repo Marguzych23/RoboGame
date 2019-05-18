@@ -55,7 +55,6 @@ class LocationService
      */
     public function generateLocationsForArea(): array
     {
-//        TODO
         $locations = array(
             new DesertArea(new Coordinates(0, 0)),
             new ElectricEarth(new Coordinates(15, 1)),

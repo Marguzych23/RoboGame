@@ -85,7 +85,7 @@ class GameService
             }
         }
 
-        foreach ($robots as $robot) {
+        foreach ($robots as $key => $robot) {
             $step = array_shift($steps);
             $robot->setCoordinates(
                 new Coordinates(
@@ -103,7 +103,6 @@ class GameService
 
             $noLocation = true;
             foreach ($game->getDeadArea()->getLocations() as $location) {
-                print_r('1_');
                 if ($this->locationService->coordinatesInLocation($robot->getCoordinates(), $location)) {
                     $this->robotService->setLocationForRobot($robot, $location);
                     $noLocation = false;
@@ -122,6 +121,16 @@ class GameService
                     break;
                 }
             }
+
+            if ($this->robotService->robotIsDead($robot)) {
+                unset($game->getRobots()[$key]);
+            }
+        }
+
+        if (empty($game->getRobots())) {
+            return 'Game over';
+        } elseif (count($game->getRobots()) === 1) {
+            return array_shift($game->getRobots())->getAuthorNickName() . ' is win!';
         }
 
         $this->gameInstanceService->saveGame($game);
