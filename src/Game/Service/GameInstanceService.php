@@ -26,7 +26,9 @@ use App\Game\Model\Trap\SystemFailure;
 
 class GameInstanceService
 {
-    const GAME_FILE_WITH_PATH = '\..\..\..\..\data\game.json';
+//    for server
+    const GAME_FILE_WITH_PATH = '/../../data/game.json';
+//    for local
 //    const GAME_FILE_WITH_PATH = '\..\..\..\data\game.json';
     protected $filePath;
     protected $fopen;
