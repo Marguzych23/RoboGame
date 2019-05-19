@@ -160,8 +160,10 @@ class GameInstanceService
                         }
                     }
 
+                    $onLocation = !is_null($robot['onLocation']) ? $robot['onLocation'] : 0;
+
                     $trapsObject = null;
-                    if (is_null(['trap'])) {
+                    if (!is_null($robot['trap'])) {
                         $trap = $robot['trap'];
                         $timeOfAction = $trap['actionTime'];
                         $trapCoordinates = new Coordinates($trap['coordinates']['x'], $trap['coordinates']['y']);
@@ -194,7 +196,8 @@ class GameInstanceService
                             $weapons,
                             $armor,
                             $locationObject,
-                            $trapsObject
+                            $trapsObject,
+                            $onLocation
                         )
                     );
                 }

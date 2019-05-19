@@ -8,7 +8,12 @@ use App\Game\DTO\DeadAreaDTO;
 use App\Game\Model\Coordinates;
 use App\Game\Model\DeadArea;
 use App\Game\Model\Game;
+use App\Game\Model\Health;
 use App\Game\Model\InteractionObject\InteractionObject;
+use App\Game\Model\InteractionObject\Weapon\ElectricStaff;
+use App\Game\Model\Location\DesertArea;
+use App\Game\Model\Location\ElectricEarth;
+use App\Game\Model\Location\RainJungle;
 use App\Game\Model\Step;
 
 class GameService
@@ -116,6 +121,32 @@ class GameService
             foreach ($game->getDeadArea()->getLocations() as $location) {
                 if ($this->locationService->coordinatesInLocation($robot->getCoordinates(), $location)) {
                     $this->robotService->setLocationForRobot($robot, $location);
+                    $robotHealth = $robot->getHealth()->getValue();
+                    switch ($location->getName()) {
+                        case DesertArea::NAME:
+                            {
+                                if ($robot->getOnLocation() % 3 == 0) {
+                                    $robotHealth = ceil($robotHealth - 100);
+                                }
+                                break;
+                            }
+                        case ElectricEarth::NAME:
+                            {
+                                if ($robot->getOnLocation() % 3 == 0) {
+                                    $robotHealth = ceil($robotHealth * 0.97);
+                                }
+                                break;
+                            }
+                        case RainJungle::NAME:
+                            {
+                                if ($robot->getOnLocation() % 4 == 0) {
+                                    $robotHealth -= (50 + (10 * $robot->getOnLocation() / 4));
+                                    $robotHealth = ceil($robotHealth);
+                                }
+                                break;
+                            }
+                    }
+                    $robot->setHealth(new Health($robotHealth));
                     $noLocation = false;
                     break;
                 }

@@ -240,9 +240,16 @@ class RobotService
      */
     public function setLocationForRobot(Robot &$robot, Location $location = null)
     {
-        if (!$this->robotHasTrap($robot, Breakdown::NAME)) {
-            $robot->setLocation($location);
+        $onLocation = 1;
+        if (
+            !is_null($location)
+            && !is_null($robot->getLocation())
+            && ($location->getName() === $robot->getLocation()->getName())
+        ) {
+            $onLocation += $robot->getOnLocation();
         }
+        $robot->setLocation($location);
+        $robot->setOnLocation($onLocation);
     }
 //    Methods with locations end
 

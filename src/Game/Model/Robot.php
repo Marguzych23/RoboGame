@@ -35,6 +35,9 @@ class Robot implements \JsonSerializable
     /** @var Location $location */
     protected $location;
 
+    /** @var int $onLocation */
+    protected $onLocation;
+
     /**
      * Robot constructor.
      * @param string $authorNickName
@@ -45,8 +48,9 @@ class Robot implements \JsonSerializable
      * @param Armor|null $armor
      * @param Location|null $location
      * @param Trap|null $trap
+     * @param int $onLocation
      */
-    public function __construct(string $authorNickName, Script $script, Coordinates $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null, Location $location = null, Trap $trap = null)
+    public function __construct(string $authorNickName, Script $script, Coordinates $coordinates, Health $health = null, array $weapons = array(), Armor $armor = null, Location $location = null, Trap $trap = null, int $onLocation = 0)
     {
         if (is_null($health)) {
             $health = new Health();
@@ -69,6 +73,7 @@ class Robot implements \JsonSerializable
         if (!is_null($trap)) {
             $this->trap = $trap;
         }
+        $this->onLocation = $onLocation;
     }
 
     /**
@@ -170,7 +175,7 @@ class Robot implements \JsonSerializable
     /**
      * @return Location
      */
-    public function getLocation(): Location
+    public function getLocation()
     {
         return $this->location;
     }
@@ -200,6 +205,22 @@ class Robot implements \JsonSerializable
     }
 
     /**
+     * @return int
+     */
+    public function getOnLocation(): int
+    {
+        return $this->onLocation;
+    }
+
+    /**
+     * @param int $onLocation
+     */
+    public function setOnLocation(int $onLocation): void
+    {
+        $this->onLocation = $onLocation;
+    }
+
+    /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,
@@ -217,6 +238,7 @@ class Robot implements \JsonSerializable
             'weapons' => $this->weapons,
             'armor' => $this->armor,
             'health' => $this->health,
+            'onLocation' => $this->onLocation,
         );
     }
 }
