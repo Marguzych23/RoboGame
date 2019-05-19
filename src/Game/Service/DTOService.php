@@ -48,7 +48,7 @@ class DTOService
             $tempAreaSize = RobotViewedDeadAreaDTO::SYSTEM_FAILURE_AREA_SIZE;
         }
 
-        $startX = $robot->getCoordinates()->getY() - (($tempAreaSize - 1) / 2);
+        $startX = $robot->getCoordinates()->getX() - (($tempAreaSize - 1) / 2);
         $startY = $robot->getCoordinates()->getY() - (($tempAreaSize - 1) / 2);
         $viewedAreaStartCoordinates = new Coordinates($startX, $startY);
         $viewedAreaStartCoordinatesDTO = $this->getCoordinatesDTO($viewedAreaStartCoordinates);
@@ -66,11 +66,15 @@ class DTOService
 
         $opponentsRobotsDTO = array();
         foreach ($game->getDeadArea()->getRobots() as $opponentRobot) {
-            if (($opponentRobot->getAuthorNickName() !== $robot->getAuthorNickName())
-                && ($this->coordinatesService->checkCoordinatesOnZone(
-                    $opponentRobot->getCoordinates(),
-                    $viewedAreaStartCoordinates,
-                    $tempAreaSize))
+            if (
+                ($opponentRobot->getAuthorNickName() !== $robot->getAuthorNickName())
+                && (
+                    $this->coordinatesService->checkCoordinatesOnZone(
+                        $opponentRobot->getCoordinates(),
+                        $viewedAreaStartCoordinates,
+                        $tempAreaSize
+                    )
+                )
             ) {
                 array_push($opponentsRobotsDTO, $this->getRobotDTO($opponentRobot));
             }

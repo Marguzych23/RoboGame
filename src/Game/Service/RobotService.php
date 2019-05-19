@@ -189,7 +189,13 @@ class RobotService
      */
     public function useWeapon(Robot &$used, Robot &$against)
     {
-        if ($this->robotHasWeapon($used) && ($used->getTrap()->getName() !== CongestionZone::NAME)) {
+        if (
+            $this->robotHasWeapon($used)
+            && (
+                (!is_null($used->getTrap()) && ($used->getTrap()->getName() !== CongestionZone::NAME))
+                || is_null($used->getTrap())
+            )
+        ) {
             $maxDamageWeaponValue = 0;
             $maxDamageWeaponIndex = -1;
             for ($i = 0; $i < count($used->getWeapons()); $i++) {
@@ -200,7 +206,9 @@ class RobotService
             }
             $weapon = $used->getWeapons()[$maxDamageWeaponIndex];
             $this->useWeaponAgainstRobot($against, $weapon);
-            array_splice($used->getWeapons(), $maxDamageWeaponIndex, 1);
+            $weapons = $used->getWeapons();
+            unset($weapons[$maxDamageWeaponIndex]);
+            $used->setWeapons($weapons);
         }
     }
 
@@ -348,7 +356,6 @@ class RobotService
             );
         }
         if ($this->robotHasWeapon($robot) && !$this->robotHasTrap($robot, CongestionZone::NAME)) {
-
             $dest = ($this->robotHasTrap($robot, SystemFailure::NAME)) ? 1 : 2;
             foreach ($robotViewedDeadAreaDTO->getRobots() as $tempRobot) {
                 $x = $tempRobot->getCoordinates()->getX() - $robot->getCoordinates()->getX();

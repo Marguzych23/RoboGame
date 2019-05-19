@@ -76,7 +76,6 @@ class GameService
             $this->robotService->useTrapIfThisExist($robot);
 
             if (($target = $step->getTarget())->getY() !== -1) {
-                print_r(213214);
                 foreach ($robots as $tRobot) {
                     if (($robot !== $tRobot) && ($tRobot->getCoordinates()->getX() === $target->getX())
                         && ($tRobot->getCoordinates()->getY() === $target->getY())) {
