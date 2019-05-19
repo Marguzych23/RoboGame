@@ -18,6 +18,8 @@ class RobotDTO implements \JsonSerializable
     public $armor;
     /** @var string $trap */
     public $trap;
+    /** @var array $weapons */
+    public $weapons;
 
     /**
      * RobotDTO constructor.
@@ -25,8 +27,11 @@ class RobotDTO implements \JsonSerializable
      * @param string $name
      * @param int $health
      * @param string $script
+     * @param int $armor
+     * @param string $trap
+     * @param array $weapons
      */
-    public function __construct(CoordinatesDTO $coordinates, string $name, int $health, string $script, int $armor, string $trap)
+    public function __construct(CoordinatesDTO $coordinates, string $name, int $health, string $script, int $armor, string $trap, array $weapons)
     {
         $this->coordinates = $coordinates;
         $this->name = $name;
@@ -34,6 +39,7 @@ class RobotDTO implements \JsonSerializable
         $this->script = $script;
         $this->armor = $armor;
         $this->trap = $trap;
+        $this->weapons = $weapons;
     }
 
     /**
@@ -116,6 +122,7 @@ class RobotDTO implements \JsonSerializable
             'script' => $this->script,
             'armor' => $this->armor,
             'trap' => $this->trap,
+            'weapons' => $this->weapons,
         );
     }
 }

@@ -307,18 +307,48 @@ class RobotService
         if ($this->robotHasTrap($robot, Breakdown::NAME)) {
             $step->setDestination($robot->getCoordinates());
         } else {
-            $x = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getX();
-            $y = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getY();
-            $x = ($x !== 0) ? (($x > 0) ? 1 : -1) : 0;
-            $y = ($y !== 0) ? (($y > 0) ? 1 : -1) : 0;
+            $x = $robot->getCoordinates()->getX();
+            $y = $robot->getCoordinates()->getY();
+            if (!empty($robotViewedDeadAreaDTO->getInteractionObjects())) {
+                foreach ($robotViewedDeadAreaDTO->getInteractionObjects() as $interactionObject) {
+                    $x = $robot->getCoordinates()->getX() - $interactionObject->getCoordinates()->getX();
+                    $y = $robot->getCoordinates()->getY() - $interactionObject->getCoordinates()->getY();
+                    if (($x <= 1) && ($x >= -1) && ($y <= 1) && ($y >= -1)) {
+                        $x = $interactionObject->getCoordinates()->getX();
+                        $y = $interactionObject->getCoordinates()->getY();
+                        break;
+                    }
+                }
+            } else {
+                $x = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getX();
+                $y = DeadArea::START_SIZE / 2 - $robot->getCoordinates()->getY();
+                $x = ($x !== 0) ? (($x > 0) ? 1 : -1) : 0;
+                $y = ($y !== 0) ? (($y > 0) ? 1 : -1) : 0;
+                $x = $x + $robot->getCoordinates()->getX();
+                $y = $y + $robot->getCoordinates()->getY();
+            }
+
+            foreach ($robotViewedDeadAreaDTO->getRobots() as $robot_) {
+                if (
+                    ($x == $robot_->getCoordinates()->getX())
+                    && ($y == $robot_->getCoordinates()->getY())
+                    && ($robot->getAuthorNickName() !== $robot_->getName())
+                ) {
+                    $x = $robot->getCoordinates()->getX();
+                    $y = $robot->getCoordinates()->getY();
+                    break;
+                }
+            }
+
             $step->setDestination(
                 new Coordinates(
-                    $robot->getCoordinates()->getX() + $x,
-                    $robot->getCoordinates()->getY() + $y
+                    $x,
+                    $y
                 )
             );
         }
         if ($this->robotHasWeapon($robot) && !$this->robotHasTrap($robot, CongestionZone::NAME)) {
+
             $dest = ($this->robotHasTrap($robot, SystemFailure::NAME)) ? 1 : 2;
             foreach ($robotViewedDeadAreaDTO->getRobots() as $tempRobot) {
                 $x = $tempRobot->getCoordinates()->getX() - $robot->getCoordinates()->getX();

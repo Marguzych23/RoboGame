@@ -130,13 +130,18 @@ class DTOService
      */
     public function getRobotDTO(Robot $robot)
     {
+        $weapons = array();
+        foreach ($robot->getWeapons() as $weapon) {
+            array_push($weapons, $weapon->getName());
+        }
         return new RobotDTO(
             $this->getCoordinatesDTO($robot->getCoordinates()),
             $robot->getAuthorNickName(),
             $robot->getHealth()->getValue(),
             $robot->getScript()->getCode(),
             $robot->getArmor()->getValue(),
-            (is_null($robot->getTrap()) ? '' : $robot->getTrap()->getName())
+            (is_null($robot->getTrap()) ? '' : $robot->getTrap()->getName()),
+            $weapons
         );
     }
 

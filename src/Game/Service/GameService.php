@@ -8,7 +8,7 @@ use App\Game\DTO\DeadAreaDTO;
 use App\Game\Model\Coordinates;
 use App\Game\Model\DeadArea;
 use App\Game\Model\Game;
-use App\Game\Model\Robot;
+use App\Game\Model\InteractionObject\InteractionObject;
 use App\Game\Model\Step;
 
 class GameService
@@ -76,6 +76,7 @@ class GameService
             $this->robotService->useTrapIfThisExist($robot);
 
             if (($target = $step->getTarget())->getY() !== -1) {
+                print_r(213214);
                 foreach ($robots as $tRobot) {
                     if (($robot !== $tRobot) && ($tRobot->getCoordinates()->getX() === $target->getX())
                         && ($tRobot->getCoordinates()->getY() === $target->getY())) {
@@ -87,16 +88,27 @@ class GameService
 
         foreach ($robots as $key => $robot) {
             $step = array_shift($steps);
-            $robot->setCoordinates(
-                new Coordinates(
-                    $step->getDestination()->getX(), $step->getDestination()->getY()
-                )
+            $stepCoordinates = new Coordinates(
+                $step->getDestination()->getX(), $step->getDestination()->getY()
             );
+            foreach ($robots as $robot_) {
+                if (
+                    ($stepCoordinates->getX() == $robot_->getCoordinates()->getX())
+                    && ($stepCoordinates->getY() == $robot_->getCoordinates()->getY())
+                    && ($robot->getAuthorNickName() !== $robot_->getAuthorNickName())
+                ) {
+                    $stepCoordinates = $robot->getCoordinates();
+                    break;
+                }
+            }
+            $robot->setCoordinates($stepCoordinates);
+
             foreach ($game->getDeadArea()->getInteractionObjects() as $interactionObject) {
                 if (($interactionObject->getCoordinates()->getX() === $robot->getCoordinates()->getX())
                     && ($interactionObject->getCoordinates()->getY() === $robot->getCoordinates()->getY())
                 ) {
                     $this->robotService->setInteractionObjectForRobot($interactionObject, $robot);
+                    $this->deleteInteractionObjectFromDeadArea($game, $interactionObject);
                     break;
                 }
             }
@@ -224,6 +236,17 @@ class GameService
             }
         }
         return $result;
+    }
+
+    public function deleteInteractionObjectFromDeadArea(Game $game, InteractionObject $interactionObject)
+    {
+        $interactionObjects_ = $game->getDeadArea()->getInteractionObjects();
+        foreach ($interactionObjects_ as $key => $interactionObject_) {
+            if ($interactionObject->getName() === $interactionObject_->getName()) {
+                unset($interactionObjects_[$key]);
+                $game->getDeadArea()->setInteractionObjects($interactionObjects_);
+            }
+        }
     }
 
     /**

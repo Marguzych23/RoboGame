@@ -64,9 +64,6 @@ class CoordinatesDTO implements \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array(
-            'x' => $this->x,
-            'y' => $this->y,
-        );
+        return array($this->x, $this->y);
     }
 }

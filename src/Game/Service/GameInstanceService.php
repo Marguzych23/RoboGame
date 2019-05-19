@@ -131,7 +131,8 @@ class GameInstanceService
                                     break;
                                 }
                         }
-                        array_push($weaponsArray, $weaponObject);
+
+                        array_push($weapons, $weaponObject);
                     }
 
                     $armor = new Armor(new Coordinates($robot['coordinates']['x'], $robot['coordinates']['y']), $robot['armor']['value']);
