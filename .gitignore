@@ -8,7 +8,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 .idea/
-composer.lock
+#composer.lock
 composer.phar
 symfony.lock
 
