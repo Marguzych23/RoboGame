@@ -27,7 +27,7 @@ use App\Game\Model\Trap\SystemFailure;
 class GameInstanceService
 {
 //    for server
-    const GAME_FILE_WITH_PATH_FOR_SERVER = '/../../data/game.json';
+    const GAME_FILE_WITH_PATH_FOR_HEROKU = '/../../data/game.json';
 //    for local
     const GAME_FILE_WITH_PATH_FOR_LOCAL = '\..\..\..\data\game.json';
 
@@ -40,11 +40,10 @@ class GameInstanceService
      */
     public function __construct()
     {
-        if (strpos($_SERVER['SERVER_NAME'], '127.0')) {
+        if (strpos($_SERVER['SERVER_NAME'], 'herokuapp.com')) {
+            $this->filePath = __DIR__ . self::GAME_FILE_WITH_PATH_FOR_HEROKU;
+        } else {
             $this->filePath = __DIR__ . self::GAME_FILE_WITH_PATH_FOR_LOCAL;
-        } else  {
-            print_r($_SERVER['SERVER_NAME']);
-            $this->filePath = __DIR__ . self::GAME_FILE_WITH_PATH_FOR_SERVER;
         }
     }
 
