@@ -69,8 +69,17 @@ class GameController extends AbstractController
                 'result' => false
             ));
         }
+        $result = $gameService->getNextStepGame();
+        if (is_string($result)) {
+            return new JsonResponse(
+                json_encode(array('result' => $result)),
+                200,
+                array(),
+                true
+            );
+        }
         return new JsonResponse(
-            $gameService->getGameDTO($gameService->getNextStepGame()),
+            $gameService->getGameDTO($result),
             200,
             array(),
             true

@@ -95,6 +95,15 @@ class GameService
             $stepCoordinates = new Coordinates(
                 $step->getDestination()->getX(), $step->getDestination()->getY()
             );
+            if (
+            !$this->coordinatesService->checkCoordinatesOnZone(
+                $stepCoordinates,
+                new Coordinates(0, 0),
+                DeadArea::START_SIZE
+            )
+            ) {
+                $stepCoordinates = $robot->getCoordinates();
+            }
             foreach ($robots as $robot_) {
                 if (
                     ($stepCoordinates->getX() == $robot_->getCoordinates()->getX())
@@ -163,16 +172,24 @@ class GameService
                     break;
                 }
             }
+        }
 
-            if ($this->robotService->robotIsDead($robot)) {
-                unset($game->getRobots()[$key]);
+        foreach ($robots as $key => $robot_) {
+            if ($this->robotService->robotIsDead($robot_)) {
+                $robots_ = $game->getRobots();
+                unset($robots_[$key]);
+                $game->getDeadArea()->setRobots($robots_);
             }
         }
 
         if (empty($game->getRobots())) {
+            $this->gameInstanceService->deleteGame();
             return 'Game over';
         } elseif (count($game->getRobots()) === 1) {
-            return array_shift($game->getRobots())->getAuthorNickName() . ' is win!';
+            foreach ($game->getRobots() as $robot_) {
+                $this->gameInstanceService->deleteGame();
+                return $robot_->getAuthorNickName() . ' is win!';
+            }
         }
 
         $this->gameInstanceService->saveGame($game);
